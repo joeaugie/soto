@@ -1,0 +1,245 @@
+#home ul li a {
+	font-size: 1.2em;
+}
+
+#viewSessionsPanel ul li {
+    position: relative;
+}
+#viewSessionsPanel ul li .subjectName {
+	display: inline-block;
+	width: 66%;
+	max-width: 66%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 1.2em;
+    color: #FFFFFF;
+    text-shadow: rgba(0,0,0,.7) 0 1px 2px;
+}
+#viewSessionsPanel ul li .metaData {
+	font-size: .88em;
+	font-style: normal;
+	font-weight: normal;
+    color: #cccccc;;
+    text-shadow: rgba(0,0,0,.7) 0 1px 2px;
+	display: inline-block;
+	width: 66%;
+	max-width: 66%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+#viewSessionsPanel ul li .delete {
+	color: #ff3333;
+    position: absolute;
+	vertical-align: middle;
+    top: 10px;
+    right: 6px;
+    font-size: .9em;
+    line-height: 30px;
+    padding: 0 3px;
+    border-width: 0 5px;
+    -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+}
+#viewSessionsPanel ul li .view {
+    position: absolute;
+    top: 5px;
+    right: 63px;
+    font-size: 12px;
+	color: white;
+    line-height: 30px;
+    padding: 0 3px;
+    border-width: 0 5px;
+    -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+}
+
+
+#intervalHeader {
+	color: white;
+	font-size: 1.2em;
+}
+#flashNewInterval {
+	-webkit-border-radius: 10px;
+	background-color: rgba(0,0,0,.7);
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	height: 80px;
+	left: 60px;
+	line-height: 80px;
+	margin: 0 auto;
+	position: absolute;
+	text-align: center;
+	top: 120px;
+	width: 200px;
+}
+
+#observationSessionControls {
+
+}
+#observationSessionControls .observationItem {
+	width: 97.5%;
+	height: 1.1em;
+	margin: auto;
+	padding: 17px;
+  font-size: 150%;
+}
+#observationSessionControls input[type=checkbox] {
+	width: 2em;
+	height: 2em;
+}
+
+#observationSessionControls .recordText {
+	padding-left: 17px;
+}
+.recordText {
+	color: #ffffff;
+	font-size: 0.9em;
+}
+.recordTextPEER {
+	color: #ffffff;
+	font-size: 0.9em;
+}
+ul.roundedRecordInput {
+    -webkit-border-radius: 8px;
+    -webkit-box-shadow: rgba(0,0,0,.3) 1px 1px 3px;
+}
+ul.roundedRecordInput li:first-child, ul.roundedRecordInput li:first-child a {
+    border-top: 0;
+    -webkit-border-top-left-radius: 8px;
+}
+ul.roundedRecordInput li:nth-child(2), ul.roundedRecordInput li:nth-child(2) a {
+    border-top: 0;
+    -webkit-border-top-left-radius: 8px;
+    -webkit-border-top-right-radius: 8px;
+}
+ul.roundedRecordInput li:last-child, ul.roundedRecordInput li:last-child a {
+    border-top: 0;
+    -webkit-border-bottom-left-radius: 8px;
+    -webkit-border-bottom-right-radius: 8px;
+}
+
+h1.reportHeader {
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: center;
+	padding-bottom: 10px;
+}
+span.reportLabel {
+	display: inline-block;
+	width: 75px;
+	text-align: right;
+	padding-right: 10px;
+	float: left;
+	font-size: 1.2em;
+	color: #cccccc;;;
+}
+span.reportValue {
+	display: block;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 1.2em;
+	text-align: left;
+}
+span.reportValue a {
+	color: #0080ff;
+}
+
+div.reportSection {
+	padding: 13px;
+}
+.reportColumnHeader {
+	display: inline-block;
+	width: 30%;
+	font-size: 1.33em;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 7px;
+}
+
+#reportDataContainer, #helpPanel, #aboutPanel {
+	border: thin;
+	border-color: #ffffff;
+	border-style: solid;
+	padding: 13px;
+}
+
+.reportRowHeading {
+	background-color: #000000;
+}
+.reportRowSubHeading{
+	background-color: #222222;
+}
+.reportColumnData {
+	display: inline-block;
+	width: 30%;
+	font-size: 1.25em;
+	font-weight: bold;
+	text-align: center;
+}
+.reportColumnSubData {
+	display: inline-block;
+	width: 30%;
+	font-size: 1em;
+	font-weight: normal;
+	text-align: center;
+}
+.reportRowHeader {
+	display: inline-block;
+	width: 27.5%;
+	font-size: 1.15em;
+	font-weight: bold;
+	padding-left: 3px;
+	padding-bottom: 11px;
+	padding-top: 9px;
+}
+.reportRowSubHeader {
+	display: inline-block;
+	text-indent: 20px;
+	width: 25%;
+	font-size: .90em;
+	font-weight: normal;
+	padding-left: 3px;
+	padding-bottom: 2px;
+}
+
+.subjectData {
+	color: #ff3300;
+}
+.peerData {
+	color: #0080ff;
+}
+
+.chartContainer {
+	border-style: solid;
+	border-width: thin;
+	border-color: #ffffff;
+	padding-bottom: 13px;
+	margin-bottom: 13px;
+	background-color: #cccccc;
+}
+.chartTitle {
+	display: block;
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+	padding-top: 17px;
+}
+.chartCaption {
+	display: block;
+	text-align: center;
+	padding-bottom: 13px;
+	padding-top: 7px;
+}
+.chartCaption span + span {
+	padding-left: 13px;
+}
+
+.copyright {
+	display: block;
+	text-align: center;
+	font-size: 1em;
+	padding: 13px;
+
+}

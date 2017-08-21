@@ -1,0 +1,209 @@
+<html>
+    <head>
+        <meta name="sotoversion" content="0.1.52" />
+        <title>The SOTO</title>
+        <link type="text/css" rel="stylesheet" media="screen" href="jqtouch/jqtouch.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="themes/jqt/theme.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="soto.css">
+		<script type="text/javascript" src="phonegap.0.9.4.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="jqtouch/jquery.js"></script>
+        <script type="text/javascript" src="jqtouch/jqtouch.js"></script>
+        <script type="text/javascript" src="EmailComposer.js"></script>
+        <script type="text/javascript" src="soto.js"></script>
+    </head>
+    <body>
+        <div id="home">
+            <div class="toolbar">
+                <h1>The SOTO</h1>
+                <a class="button swap" href="#settings" style="display:inherit;">Settings</a>
+            </div>
+            <ul class="edgetoedge">
+                <li class="arrow"><a href="#newSessionPanel">New Observation</a></li>
+                <li class="arrow"><a href="#viewSessionsPanel">Reports</a></li>
+                <li class="arrow"><a href="#aboutPanel">About</a></li>
+                <li class="arrow"><a href="#helpPanel">Help</a></li>
+            </ul>
+            <span class="copyright">Copyright (C) 2011 Monkey Apps</span>
+            <span class="copyright">http://monkeylikesit.com</span>
+        </div>
+        <div id="newSessionPanel">
+            <div class="toolbar">
+                <h1>New Session</h1>
+                <a class="button cancel" href="#">Cancel</a>
+            </div>
+                <ul class="rounded">
+                    <li><input type="text" placeholder="Subject Name" name="subjectName" id="subjectName" autocapitalize="on" autocorrect="off" autocomplete="off" /></li>
+                    <li><input type="text" placeholder="Class Location" name="classLocation" id="classLocation" autocapitalize="on" autocorrect="off" autocomplete="off" /></li>
+                    <li><input type="text" placeholder="Description of Activity" name="activityDescription" id="activityDescription" autocapitalize="on" autocorrect="off" autocomplete="off" /></li>
+                    <li class="arrow" onclick="saveNewSession()">Next</li>
+                </ul>
+        </div>
+        <div id="recordSessionPanel">
+            <div class="toolbar">
+                <h1>Record</h1>
+                <a class="button cancel" id="cancelRecordSession" style="display: inline;" href="#home">Cancel</a>
+            </div>
+            <div id="intervalHeader" class="recordText">
+				<span id="intervalHeaderText">Click <i>Start</i> to begin.</span>
+				<span id="intervalHeaderSecondsLeft"></span>
+            </div>
+            <form method="post">
+                <div id="onTask">
+                    <ul class="roundedRecordInput">
+                        <li style="display: run-in;"><input type="checkbox" name="AET" id="AET" disabled onclick="toggleAET()" /></li><li style="display: list-item;" onclick="clickAET()" class="recordText" id="AETLabel"> Academically Engaged</li>
+                        <li style="display: run-in; border-top: 0px;"><input type="checkbox" name="PET" id="PET" disabled onclick="togglePET()" /></li><li style="display: list-item;" onclick="clickPET()" class="recordText" id="PETLabel"> Passively Engaged</li>
+                    </ul>
+                </div>
+                <div id="offTask">
+                    <ul class="roundedRecordInput">
+                        <li style="display: run-in; border-top: 0px;"><input type="checkbox" name="OTM" id="OTM" disabled /></li><li style="display: list-item;" onclick="clickOTM()" class="recordText" id="OTMLabel"> Off-Task MOTOR</li>
+                        <li style="display: run-in; border-top: 0px;"><input type="checkbox" name="OTV" id="OTV" disabled /></li><li style="display: list-item;" onclick="clickOTV()" class="recordText" id="OTVLabel"> Off-Task VERBAL</li>
+                        <li style="display: run-in; border-top: 0px;"><input type="checkbox" name="OTP" id="OTP" disabled /></li><li style="display: list-item;" onclick="clickOTP()" class="recordText" id="OTPLabel"> Off-Task PASSIVE</li>
+                    </ul>
+                </div>
+                <p style="text-align: center">
+                    <input id="recordSessionPanelStartButton" type="submit" class="submit" name="action" value="Start" />
+                    <input id="recordSessionPanelPauseButton" onclick="pauseRecordingSession()" type="button" name="pause" value="Pause" />
+                    <input id="recordSessionPanelEndButton" onclick="endRecordingSession()" type="button" name="end" value="End" />
+                </p>
+            </form>
+        </div>
+        <div id="viewSessionsPanel">
+            <div class="toolbar">
+                <h1>My Sessions</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+            <ul class="edgetoedge">
+                <li id="savedSessionItem" class="entry" style="display:none">
+                    <span class="subjectName">Label</span>
+                    <span class="delete">Delete</span>
+                    <div  class="metaData" id="classLocation">000</div>
+                    <div  class="metaData" id="observationDate">000</div>
+                </li>
+            </ul>
+        </div>
+        <div id="observationResultsPanel">
+            <div class="toolbar">
+                <h1 id="reportTitle">Report</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+			<div class="reportSection" id="observationMetaData">
+				<span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>
+				<span class="reportLabel">Date: </span><span class="reportValue" id="omdDate">&nbsp;</span>
+				<span class="reportLabel">Activity: </span><span class="reportValue" id="omdActivity">foo</span>
+			</div>
+            <div class="reportSection" id="emailReport">
+				<span class="reportLabel">Email: </span><span class="reportValue" id="omdSendReport">
+				<input id="sendReportButton" onclick="sendReport()" type="button" name="pause" value="Send Report" />
+				<!-- a id="sendReportLink" href="#" onclick="sendReport()" >Send this report</a--></span>
+            </div>
+			<div class="reportSection" id="summaryTable">
+				<div id="reportDataContainer">
+					<p>								<span class="reportRowHeader"	 id="empty"></span>						<span class="reportColumnHeader subjectData" id="reportHeaderSubject">Subject</span>	<span class="reportColumnHeader peerData"	id="reportHeaderPeer">Peer</span>	</p>
+					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOnTask">On-Task</span>	<span class="reportColumnData subjectData" id="reportDataOnTaskSubject"></span>			<span class="reportColumnData peerData"		id="reportDataOnTaskPeer"></span>	</p>
+					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelAET">AET</span>			<span class="reportColumnSubData subjectData" id="reportDataAETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataAETPeer"></span>		</p>
+					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelPET">PET</span>			<span class="reportColumnSubData subjectData" id="reportDataPETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataPETPeer"></span>		</p>
+					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOffTask">Off-Task</span><span class="reportColumnData subjectData" id="reportDataOffTaskSubject"></span>		<span class="reportColumnData peerData"		id="reportDataOffTaskPeer"></span>	</p>
+					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTM">OTM</span>			<span class="reportColumnSubData subjectData" id="reportDataOTMSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTMPeer"></span>		</p>
+					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTV">OTV</span>			<span class="reportColumnSubData subjectData" id="reportDataOTVSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTVPeer"></span>		</p>
+					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTP">OTP</span>			<span class="reportColumnSubData subjectData" id="reportDataOTPSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTPPeer"></span>		</p>
+				</div>
+			</div>
+            <div class="reportSection">
+			    <div class="chartContainer" style="color:white; text-align:center;">
+					<span class="chartTitle">On-Task / Off-Task</span>
+				    <canvas id="can" height="200" width="280" style="border:'red 1px solid'"></canvas>
+				</div>
+			    <div class="chartContainer" style="color:white; text-align:center;">
+					<span class="chartTitle">AET / PET</span>
+				    <canvas id="onTaskCanvas" height="200" width="280"></canvas>
+            	</div>
+			    <div class="chartContainer" style="color:white; text-align:center;">
+					<span class="chartTitle">OTM / OTV / OTP</span>
+				    <canvas id="offTaskCanvas" height="200" width="280"></canvas>
+				</div>
+<!--
+	            <div class="reportSection">
+					<h1 class="reportHeader">Raw Data</h1>
+	                <ul class="edgetoedge">
+	                    <li id="intervalDataItems" class="entry" style="display:none">
+	                        <span class="peer"></span>
+	                        <span class="intervalNumber">Label</span>
+	                        <span class="onTask"></span>
+	                        <span class="offTasks"></span>
+	                    </li>
+	                </ul>
+	            </div>
+-->
+        	</div>
+		</div>
+        <div id="aboutPanel">
+            <div class="toolbar">
+                <h1>About</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+            <div>
+                <p>The SOTO (<i>Student On-Task Observation</i>) App helps you gather, analyze and document &quot;on-task / off-task&quot; observation data of your students.</p><br/>
+				<p>Our goal is to provide a simple, intuitive app that makes behavioral observation fast and easy for everyone.  We hope this app helps save you time and effort with accurate data collection and reporting.</p>
+				<ul>
+					<li>Have questions about this app?</li>
+					<li>Want to see other features here?</li>
+					<li>Got other app ideas for schools? </li>
+				</ul>
+				<p>Email us at <a style="color: #0080ff" href="mailto:support@monkeylikesit.com?subject=SOTO Support Email: " target="_blank">support@monkeylikesit.com</a>! </p><br/><br/>
+				<p>Also visit our website at <b>http://monkeylikesit.com</b> for more information and additional resources.</p><br/><br/>
+
+            </div>
+        </div>
+        <div id="helpPanel">
+            <div class="toolbar">
+                <h1>Help</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+            <div>
+                <h2>Settings</h2>
+				<p>From the home page, click on the "Settings" button in the top right corner of the screen.</p><br/>
+				<p><b>Interval Length</b> - This setting represents how long each observation interval will last (in seconds).  The default recommended length is 15 seconds.</p><br/>
+				<p><b>Peer Interval</b> - This setting is the interval factor for when you want to observe a peer, for comparing against your subject student.  For example, if you enter 5, then every 5th interval will be a peer observation.</p><br/>
+				<p><b>Default Email</b> - This is the default email you want SOTO reports to be sent to. You are able to modify recipients before sending any report.</p></br>
+				<p><b>Vibrate New Intervals</b> - Check this box if you want the SOTO to vibrate your device just before the start of a new interval</p></br>
+
+                <h2>New Observation</h2>
+				<p>Click on this item to begin recording a new observation session.  You are required to enter the student's name, the location of the observation and optionally, a description of the activity or setting being observed.</p><br/>
+				<p>After entering this information, click on the "Next" button to continue.</p><br/>
+
+				<h2>Record</h2>
+				<p>The first two checkboxes record when you observe that the student is "On-Task".  You should make this determination within the <b>first few seconds</b> of every interval.</p><br/>
+				<p>If you observe that the student is "On-Task", then check whether the student is "Academically Engaged" or "Passively Engaged".</p><br/>
+				<p>If you observe that the student is "Off-task", then do <u>NOT</u> select either of these two checkboxes.  The interval will then be recorded as "off-task".</p><br/>
+				<p>The last three checkboxes indicate any type of "Off-Task" observation throughout the duration of a given interval.  If at any time during the interval, you observe the student being "Off-Task", then select all appropriate "Off-Task" types.</p></br>
+				<p><b>TIP: </b>It is possible that in the beginning of the interval, you recorded that the student is "On-Task", but then later in the interval, you observe that the student was "Off-Task".</p></br>
+
+				<p><b>START</b> - Simply click the start button when you're ready to begin your observations.</p><br/>
+				<p><b>PAUSE</b> - Click the pause button when for any reason you need to temporarily stop the observation.  Click the "start" button again to resume your session.</p><br/>
+				<p><b>END</b> - When you are finished with your session, click the END button.  This will save all of your recorded data.</p><br/>
+
+
+				<h2>Reports</h2>
+				<p>This page will list all of your recorded observation sessions, in order by the date of each observation.  Simply click on any observation listing, and this will take you to the Reports page.</p><br/>
+				<p>When you view a report, there is a button near the top that will send the report and graphs via email.</p><br/>
+				<p><b>TIP: </b>You must have email configured on your mobile device in order to send out SOTO reports.  SOTO Graphs are included as PNG image attachments, which you can then copy and use in your own report documentation.</p><br/>
+            </div>
+        </div>
+        <div id="settings">
+            <div class="toolbar">
+                <h1>Settings</h1>
+                <a class="button cancel" href="#">Cancel</a>
+            </div>
+            <form method="post">
+                <ul class="rounded">
+                    <li>Interval Length (in seconds)<input placeholder="Interval Length" type="text" name="intervalLength" id="intervalLength" /></li>
+                    <li>Peer Interval<input placeholder="Peer Intervals" type="text" name="peerInterval" id="peerInterval" /></li>
+                    <li>Default Email<input placeholder="your_email@school.edu" type="text" name="userEmail" id="userEmail" autocapitalize="false" /></li>
+                    <li><input type="checkbox" name="vibrateNewIntervals" id="vibrateNewIntervals" /> Vibrate New Intervals</li>
+                    <li><input type="submit" class="submit" name="action" value="Save Changes" /></li>
+                </ul>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-email-composer": {
+            "PACKAGE_NAME": "com.monkeylikesit.sandbox002"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.monkeylikesit.sandbox002"
+        },
+        "cordova-plugin-canvas2image": {
+            "PACKAGE_NAME": "com.monkeyapps.soto"
+        },
+        "cordova-plugin-email": {
+            "PACKAGE_NAME": "com.monkeyapps.soto"
+        }
+    },
+    "dependent_plugins": {}
+}
