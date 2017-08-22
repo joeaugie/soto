@@ -21,7 +21,7 @@ var staticHREF;
 	var timer_is_on = 0;						// Boolean to indicate whether a sessions is in progress or not.
 	var interval = 1;							// Keeps track of the current interval being recorded
 	var intervalTarget = "Subject";				// Keeps track if the interval is observing a student or a peer
-	var intervalHeading = "Interval #: <b>";
+	var intervalHeading = "<h4>Interval Number</h4>";
 	var fT; //flashTimer used for end of interval warnings
 
 	// The following variables prefixed with "ar" are used to hold  data of the observation session being recorded.
@@ -812,8 +812,8 @@ function timedCount() {
 	var timer = INTERVAL_LENGTH;
 
   t = setInterval(function () {
-			document.getElementById('intervalHeaderText').innerHTML = intervalHeading + interval + "</b><br/> Seconds remaining: ";
-			document.getElementById('intervalHeaderSecondsLeft').innerHTML = timer;
+			document.getElementById('intervalHeaderText').innerHTML = intervalHeading + "<span class='digits'>" + interval + "</span>";
+			document.getElementById('intervalHeaderSecondsLeft').innerHTML = "<span class='digits'>" + timer + "</span>";
 		  c = c - 1;
 
 			if (timer == 2){
@@ -829,30 +829,16 @@ function timedCount() {
 			if (--timer < 0) {
 				// Start the next interval
 		      saveIntervalData(intervalTarget);
-					intervalHeading = "Interval #: <b>";
+					intervalHeading = "<h4>Interval Number</h4>";
 					interval++;
 					flashIntervalHeaderOff();
 					if (interval == peerInterval) {
 						intervalTarget = "Peer";
 						peerInterval = peerInterval + PEER_INTERVAL_FACTOR;
-						intervalHeading = "<b>PEER INTERVAL #: <b>";
-
-						document.getElementById("intervalHeader").style.color = "yellow";
-						document.getElementById("AETLabel").style.color = "yellow";
-						document.getElementById("PETLabel").style.color = "yellow";
-						document.getElementById("OTMLabel").style.color = "yellow";
-						document.getElementById("OTVLabel").style.color = "yellow";
-						document.getElementById("OTPLabel").style.color = "yellow";
-
+						intervalHeading = "<h4><strong style='color:red;'>Peer</strong> Interval Number</h4>";
 					}
 					else {
 						intervalTarget = "Subject";
-						document.getElementById("intervalHeader").style.color = "#ffffff";
-						document.getElementById("AETLabel").style.color = "#ffffff";
-						document.getElementById("PETLabel").style.color = "#ffffff";
-						document.getElementById("OTMLabel").style.color = "#ffffff";
-						document.getElementById("OTVLabel").style.color = "#ffffff";
-						document.getElementById("OTPLabel").style.color = "#ffffff";
 					}
 		      resetAllRecordingSessionFields();
 					// Reset timer to INTERVAL_LENGTH
@@ -888,7 +874,7 @@ function flashIntervalHeaderOn() {
     //fT = setTimeout(flashIntervalHeaderOff, 169);
 }
 function flashIntervalHeaderOff() {
-    document.getElementById('intervalHeaderSecondsLeft').style.color = "white";
+    document.getElementById('intervalHeaderSecondsLeft').style.color = "black";
     //fT = setTimeout(flashIntervalHeaderOn, 169);
 }
 function toggleAET() {
@@ -960,8 +946,8 @@ function endRecordingSession() {
 		});
 		resetAllRecordingSessionFields();
 		resetGlobalVariables();
-	  document.getElementById('intervalHeaderText').innerHTML = "Click <i>Start</i> to begin.";
-		document.getElementById('intervalHeaderSecondsLeft').innerHTML = " ";
+	  document.getElementById('intervalHeaderText').innerHTML = "<h4>Interval Number</h4><span class='digits waitingToStart'>0</span>";
+		document.getElementById('intervalHeaderSecondsLeft').innerHTML = "<span class='digits waitingToStart'>0</span>";
 		// jQT.goTo("#home");
 		$.mobile.navigate( "#home" );
 	}
@@ -973,9 +959,6 @@ function resetAllRecordingSessionFields() {
     document.getElementById("OTM").checked = false;
     document.getElementById("OTV").checked = false;
     document.getElementById("OTP").checked = false;
-
-	document.getElementById('intervalHeaderSecondsLeft').style.color = "white";
-
 }
 function resetGlobalVariables(){
 	// Global variables used for all recording session logic.
@@ -986,13 +969,7 @@ function resetGlobalVariables(){
 	interval = 1;
 	intervalTarget = "Subject";
 	peerInterval = PEER_INTERVAL_FACTOR;
-	intervalHeading = "Interval #: <b>";
-	document.getElementById("intervalHeader").style.color = "#ffffff";
-	document.getElementById("AETLabel").style.color = "#ffffff";
-	document.getElementById("PETLabel").style.color = "#ffffff";
-	document.getElementById("OTMLabel").style.color = "#ffffff";
-	document.getElementById("OTVLabel").style.color = "#ffffff";
-	document.getElementById("OTPLabel").style.color = "#ffffff";
+	intervalHeading = "<h4>Interval Number</h4>";
 }
 
 function errorHandler(transaction, error) {

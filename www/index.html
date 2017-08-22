@@ -61,7 +61,7 @@
     <link rel="stylesheet" type="text/css" href="css/index-new.css" />
 
     <!-- jquery, jquery mobile and app js -->
-    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="js\jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.5.js"></script>
     <script type="text/javascript" src="soto-original-www/soto.js"></script>
 
@@ -113,24 +113,50 @@
             <h1>Record</h1>
             <a class="button cancel" id="cancelRecordSession" style="display: inline;" href="#home">Cancel</a>
         </div>
-        <div id="intervalHeader" class="recordText">
-          <span id="intervalHeaderText">Click <i>Start</i> to begin.</span>
-          <span id="intervalHeaderSecondsLeft"></span>
+        <div id="intervalHeader" class="recordText" data-theme="b">
+          <p class="getstarted">Click Start To Begin</p>
+          <div class="ui-grid-a">
+            <div class="ui-block-a intervalNumberLabel">
+              <!-- Interval Count / Peer vs Student Labels -->
+              <div id="intervalHeaderText">
+                <h4>Interval Number</h4>
+                <span class="digits waitingToStart">0</span>
+              </div>
+            </div>
+            <div class="ui-block-b secondsLabel">
+              <!-- Seconds Remaining -->
+              <h4>Seconds Remaining</h4>
+              <div id="intervalHeaderSecondsLeft">
+                <span class="digits waitingToStart">0</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <form method="post">
+        <form method="post" data-theme="b">
           <div id="observationSessionControls">
             <div id="onTask">
-                <ul class="roundedRecordInput">
-                    <div class="observationItem"><input type="checkbox" name="AET" id="AET" disabled onclick="toggleAET()" /><span onclick="clickAET()" class="recordText" id="AETLabel"> Academically Engaged</span></div>
-                    <div class="observationItem"><input type="checkbox" name="PET" id="PET" disabled onclick="togglePET()" /><span onclick="clickPET()" class="recordText" id="PETLabel"> Passively Engaged</span></div>
-                </ul>
+                <div class="observationItem">
+                  <input type="checkbox" name="AET" id="AET" disabled onclick="toggleAET()" />
+                  <span onclick="clickAET()" class="recordText" id="AETLabel"> Academically Engaged</span>
+                </div>
+                <div class="observationItem">
+                  <input type="checkbox" name="PET" id="PET" disabled onclick="togglePET()" />
+                  <span onclick="clickPET()" class="recordText" id="PETLabel"> Passively Engaged</span>
+                </div>
             </div>
             <div id="offTask">
-                <ul class="roundedRecordInput">
-                    <div class="observationItem"><input type="checkbox" name="OTM" id="OTM" disabled /><span onclick="clickOTM()" class="recordText" id="OTMLabel"> Off-Task MOTOR</span></div>
-                    <div class="observationItem"><input type="checkbox" name="OTV" id="OTV" disabled /><span onclick="clickOTV()" class="recordText" id="OTVLabel"> Off-Task VERBAL</span></div>
-                    <div class="observationItem"><input type="checkbox" name="OTP" id="OTP" disabled /><span onclick="clickOTP()" class="recordText" id="OTPLabel"> Off-Task PASSIVE</span></div>
-                </ul>
+                <div class="observationItem">
+                  <input type="checkbox" name="OTM" id="OTM" disabled />
+                  <span onclick="clickOTM()" class="recordText" id="OTMLabel"> Off-Task MOTOR</span>
+                </div>
+                <div class="observationItem">
+                  <input type="checkbox" name="OTV" id="OTV" disabled />
+                  <span onclick="clickOTV()" class="recordText" id="OTVLabel"> Off-Task VERBAL</span>
+                </div>
+                <div class="observationItem">
+                  <input type="checkbox" name="OTP" id="OTP" disabled />
+                  <span onclick="clickOTP()" class="recordText" id="OTPLabel"> Off-Task PASSIVE</span>
+                </div>
             </div>
             <fieldset class="ui-grid-b">
                 <div class="ui-block-a">

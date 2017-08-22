@@ -1,4 +1,34 @@
+/* Joey added custom styles */
 .new-observation {
   max-width: 80%;
   margin: 0 auto;
+}
+.getstarted {
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  overflow: hidden;
+}
+.intervalNumberLabel, .secondsLabel {
+  text-align: center;
+}
+.intervalNumberLabel h4, .secondsLabel h4 {
+  margin: 0;
+}
+.digits {
+  font-size: 40px;
+}
+.waitingToStart {
+  color: #e4e4e4;
+  font-style: italic;
+}
+.observationItem {
+  display: flex;
+  width: 80%;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  margin: 0 auto 5px auto;
+}
+.observationItem .ui-checkbox {
+  width: 45px;
 }
