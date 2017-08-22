@@ -47,7 +47,7 @@ function init_db() {
               ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
               ' FirstName TEXT NOT NULL, ' +
               ' LastName TEXT NOT NULL, ' +
-              ' DateOfBirth DATE NOT NULL, ' +
+              ' DateOfBirth DATE NULL, ' +
               ' DateAdded DATE NOT NULL DEFAULT CURRENT_DATE);'
   tctExecuteSql(strSql);
 
@@ -74,6 +74,51 @@ function init_db() {
   tctExecuteSql(strSql);
 }
 
+function migrate_r1_to_r2() {
+  db.transaction(
+    function (transaction) {
+      transaction.executeSql('SELECT * FROM studentObservations;',[],
+        function (transaction, result) {
+          for (var i = 0; i < result.rows.length; i++) {
+            var row = result.rows.item(i);
+            var studentName = row.subjectName;
+            var date = new Date(Date.parse(row.observationDate));
+            var minutes = date.getUTCMinutes().toString();
+            if (minutes.length == 1) minutes = "0" + minutes;
+            var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
+                            date.getFullYear() + " at " + date.getHours() +
+                            ":" +  minutes;
+
+            db.transaction (function (tx) {
+              tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
+                            [studentName, studentName, shortDate],
+                            function (transaction, resultSet) {
+                              if (!resultSet.rowsAffected) {
+                                 // Previous insert failed. Bail.
+                                 alert('No rows affected!');
+                                 return false;
+                              }
+                              else {
+                                return resultSet.insertId
+                              }
+                           });
+
+
+
+            var classLocation = row.classLocation;
+          });
+        } //end FOR Loop
+      },
+        errorHandler
+      ); //end executeSQL
+    }
+  );   //end db.transaction
+}
+
+
+/** Helper function to execute a SQL transaction
+ * @param {string} strSql - SQL statement to execute
+ */
 function tctExecuteSql(strSql){
   console.log(strSql);
   db.transaction(function (transaction) {
