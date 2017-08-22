@@ -71,11 +71,12 @@ $(document).ready(function () {
 		VIBRATE_NEW_INTERVALS = localStorage.vibrateNewIntervals;
 	} else VIBRATE_NEW_INTERVALS = true;
 
-    var shortName = 'SOA';
-    var version = '1.0';
-    var displayName = 'Student On-Task Observation';
-    var maxSize = 65536;
-    db = openDatabase(shortName, version, displayName, maxSize);
+  var shortName = 'SOA';
+  var version = '1.0';
+  var displayName = 'Student On-Task Observation';
+  var maxSize = 65536;
+  db = openDatabase(shortName, version, displayName, maxSize);
+	init_db_r1();
 	init_db();
 	getStudentObservations();
 });
