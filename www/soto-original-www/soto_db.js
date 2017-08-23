@@ -1,35 +1,23 @@
 /** Initializes the local SOTO SQL-Lite Database Tables
 * @deprecated
 */
- function init_db_r1() {
-  db.transaction(
-      function (transaction) {
-          transaction.executeSql(
-              'CREATE TABLE IF NOT EXISTS studentObservations ' +
-              ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-              ' subjectName TEXT NOT NULL, ' +
-              ' classLocation TEXT NOT NULL, ' +
-              ' observationDate DATE NOT NULL, ' +
-              ' activityDescription TEXT NOT NULL );'
-          );
-      }
-  );
+function init_db_r1() {
+   tctExecuteSql('CREATE TABLE IF NOT EXISTS studentObservations ' +
+    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+    ' subjectName TEXT NOT NULL, ' +
+    ' classLocation TEXT NOT NULL, ' +
+    ' observationDate DATE NOT NULL, ' +
+    ' activityDescription TEXT NOT NULL );');
 
-  db.transaction(
-      function (transaction) {
-          transaction.executeSql(
-              'CREATE TABLE IF NOT EXISTS intervalData ' +
-              ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+    tctExecuteSql('CREATE TABLE IF NOT EXISTS intervalData ' +
+      ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       ' soid INT NOT NULL, ' +
-              ' interval INT NOT NULL, ' +
-              ' target TEXT NOT NULL, ' +
-              ' onTask TEXT NOT NULL, ' +
-              ' OTM BOOLEAN NOT NULL, ' +
-              ' OTV BOOLEAN NOT NULL, ' +
-              ' OTP BOOLEAN NOT NULL );'
-          );
-      }
-  );
+      ' interval INT NOT NULL, ' +
+      ' target TEXT NOT NULL, ' +
+      ' onTask TEXT NOT NULL, ' +
+      ' OTM BOOLEAN NOT NULL, ' +
+      ' OTV BOOLEAN NOT NULL, ' +
+      ' OTP BOOLEAN NOT NULL );');
 }
 
 /** Initializes the local SOTO SQL-Lite Database Tables
@@ -41,7 +29,7 @@ function init_db() {
   // For development and testing purposes
   tctExecuteSql('DROP TABLE Student');
   tctExecuteSql('DROP TABLE Observation');
-  tctExecuteSql('DROP TABLE IntervalData');
+  tctExecuteSql('DROP TABLE Interval');
 
   strSql = 'CREATE TABLE IF NOT EXISTS Student ' +
               ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -59,7 +47,7 @@ function init_db() {
               ' ActivityDescription TEXT NOT NULL );'
   tctExecuteSql(strSql);
 
-  strSql = 'CREATE TABLE IF NOT EXISTS IntervalData ' +
+  strSql = 'CREATE TABLE IF NOT EXISTS Interval ' +
            ' (IntervalDataId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
            ' ObservationId INT NOT NULL, ' +
            ' IntervalNumber INT NOT NULL, ' +
@@ -75,9 +63,9 @@ function init_db() {
 }
 
 function migrate_r1_to_r2() {
-
+  console.log("begin migrate_r1_to_r2()");
   var rstStudentObservations;
-  var qryStudentObservations = function (tx, results) {
+  var qryStudentObservations = function (tx, rs) {
     tx.executeSql('SELECT * FROM studentObservations;', [], function (tx, rs) {
       rstStudentObservations = rs;
       return procStudentObservations(tx);
@@ -123,7 +111,7 @@ function migrate_r1_to_r2() {
         for (var i = 0; i < rstIntervalData.rows.length; i++) {
           var recIntervalData = rstIntervalData.rows.item(i);
 
-          tx.executeSql('INSERT INTO IntervalData (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
+          tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
             [newObservationId, rstIntervalData.interval, rstIntervalData.target, rstIntervalData.onTask, rstIntervalData.OTM, rstIntervalData.OTV, rstIntervalData.OTP], function(tx, rs) {
               return true;
           });
@@ -131,6 +119,8 @@ function migrate_r1_to_r2() {
       };
     }
   };
+  db.transaction(qryStudentObservations);
+  console.log("end   migrate_r1_to_r2()");  
 }
 
 

@@ -78,6 +78,7 @@ $(document).ready(function () {
   db = openDatabase(shortName, version, displayName, maxSize);
 	init_db_r1();
 	init_db();
+	migrate_r1_to_r2();
 	getStudentObservations();
 });
 
