@@ -98,7 +98,7 @@ function migrate_r1_to_r2() {
         return after_InsertNewStudent(tx, newStudentId, r1_obsv, migrate_IntervalData);
       });
     }
-  };
+
 
   var insert_NewObservation = function (tx, newStudentId, r1_obsv, after_InsertNewObservation) {
     console.log("entered insert_NewObservation()");
