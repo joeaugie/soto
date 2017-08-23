@@ -64,62 +64,86 @@ function init_db() {
 
 function migrate_r1_to_r2() {
   console.log("begin migrate_r1_to_r2()");
-  var rstStudentObservations;
+
   var qryStudentObservations = function (tx, rs) {
+    console.log("entered qryStudentObservations()");
     tx.executeSql('SELECT * FROM studentObservations;', [], function (tx, rs) {
       rstStudentObservations = rs;
-      return procStudentObservations(tx);
+      return migrate_StudentObservations(tx, rstStudentObservations);
     });
   };
 
-  var procStudentObservations = function (tx) {
+  var migrate_StudentObservations = function (tx, rstStudentObservations){
+    console.log("entered migrate_StudentObservations()");
     for (var i = 0; i < rstStudentObservations.rows.length; i++) {
-      var row = rstStudentObservations.rows.item(i);
-      var studentName = row.subjectName;
-      var classLocation = row.classLocation;
-      var activityDescription = row.activityDescription;
-      var date = new Date(Date.parse(row.observationDate));
-      var minutes = date.getUTCMinutes().toString();
-      if (minutes.length == 1) minutes = "0" + minutes;
-      var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
-        date.getFullYear() + " at " + date.getHours() +
-        ":" +  minutes;
+      var r1_obsv = rstStudentObservations.rows.item(i);
+        insert_NewStudent (tx, r1_obsv, insert_NewObservation);
+      }
+  }
+  var insert_NewStudent = function (tx, r1_obsv, after_InsertNewStudent) {
+    console.log("entered insert_NewStudent(" + r1_obsv.subjectName + ")");
+    var newStudentId;
+    var studentName = r1_obsv.subjectName;
+    var date = new Date(Date.parse(r1_obsv.observationDate));
+    var minutes = date.getUTCMinutes().toString();
+    if (minutes.length == 1) minutes = "0" + minutes;
+    var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
+      date.getFullYear() + " at " + date.getHours() +
+      ":" +  minutes;
 
-      var newStudentId;
-      tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
-        [studentName, studentName, shortDate], function(tx, rs) {
-          console.log("callback [insert into student] newStudentId: " + rs.insertId);
-          newStudentId = rs.insertId;
-          return true;
-        });
-
-      var newObservationId;
-      tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription) VALUES (?,?,?,?)',
-        [newStudentId, classLocation, shortDate, activityDescription], function(tx, rs) {
-        newObservationId = rs.insertId;
-        return true;
+    tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
+      [studentName, studentName, shortDate], function(tx, rs) {
+        console.log("callback [insert into student] newStudentId: " + rs.insertId);
+        newStudentId = rs.insertId;
+        return after_InsertNewStudent(tx, newStudentId, r1_obsv, migrate_IntervalData);
       });
-
-      var rstIntervalData;
-      var qryIntervalData = function (tx, results) {
-        tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [row.id], function (tx, rs) {
-          rstIntervalData = rs;
-          return procIntervalData(tx);
-        });
-      };
-
-      var procIntervalData = function (tx) {
-        for (var i = 0; i < rstIntervalData.rows.length; i++) {
-          var recIntervalData = rstIntervalData.rows.item(i);
-
-          tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
-            [newObservationId, rstIntervalData.interval, rstIntervalData.target, rstIntervalData.onTask, rstIntervalData.OTM, rstIntervalData.OTV, rstIntervalData.OTP], function(tx, rs) {
-              return true;
-          });
-        }
-      };
     }
   };
+
+  var insert_NewObservation = function (tx, newStudentId, r1_obsv, after_InsertNewObservation) {
+    console.log("entered insert_NewObservation()");
+    var newObservationId;
+    var classLocation = r1_obsv.classLocation;
+    var activityDescription = r1_obsv.activityDescription;
+    var date = new Date(Date.parse(r1_obsv.observationDate));
+    var minutes = date.getUTCMinutes().toString();
+    if (minutes.length == 1) minutes = "0" + minutes;
+    var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
+      date.getFullYear() + " at " + date.getHours() +
+      ":" +  minutes;
+
+    tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription) VALUES (?,?,?,?)',
+      [newStudentId, classLocation, shortDate, activityDescription], function(tx, rs) {
+      newObservationId = rs.insertId;
+      return after_InsertNewObservation(tx, newObservationId, r1_obsv);
+    });
+  };
+
+  var migrate_IntervalData = function (tx, newObservationId, r1_obsv) {
+    console.log("entered migrate_IntervalData()");
+    var rstIntervalData;
+
+    /*
+    var qryIntervalData = function (tx, results) {
+      tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [r1_obsv.id], function (tx, rs) {
+        rstIntervalData = rs;
+        return procIntervalData(tx);
+      });
+    */
+    return true;
+    };
+
+  var insert_NewInterval = function (tx) {
+    for (var i = 0; i < rstIntervalData.rows.length; i++) {
+      var recIntervalData = rstIntervalData.rows.item(i);
+
+      tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
+        [newObservationId, rstIntervalData.interval, rstIntervalData.target, rstIntervalData.onTask, rstIntervalData.OTM, rstIntervalData.OTV, rstIntervalData.OTP], function(tx, rs) {
+          return true;
+      });
+    }
+  };
+
   db.transaction(qryStudentObservations);
   console.log("end   migrate_r1_to_r2()");
 }
