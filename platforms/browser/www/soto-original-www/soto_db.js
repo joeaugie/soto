@@ -120,6 +120,7 @@ function migrate_r1_to_r2() {
  * @param {string} strSql - SQL statement to execute
  */
 function tctExecuteSql(strSql){
+  console.table(strSql);
   console.log(strSql);
   db.transaction(function (transaction) {
           transaction.executeSql(strSql);

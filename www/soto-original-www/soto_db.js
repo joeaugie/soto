@@ -14,7 +14,7 @@
           );
       }
   );
- 
+
   db.transaction(
       function (transaction) {
           transaction.executeSql(
@@ -75,44 +75,45 @@ function init_db() {
 }
 
 function migrate_r1_to_r2() {
-  db.transaction(
-    function (transaction) {
-      transaction.executeSql('SELECT * FROM studentObservations;',[],
-        function (transaction, result) {
-          for (var i = 0; i < result.rows.length; i++) {
-            var row = result.rows.item(i);
-            var studentName = row.subjectName;
-            var date = new Date(Date.parse(row.observationDate));
-            var minutes = date.getUTCMinutes().toString();
-            if (minutes.length == 1) minutes = "0" + minutes;
-            var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
-                            date.getFullYear() + " at " + date.getHours() +
-                            ":" +  minutes;
 
-            db.transaction (function (tx) {
-              tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
-                            [studentName, studentName, shortDate],
-                            function (transaction, resultSet) {
-                              if (!resultSet.rowsAffected) {
-                                 // Previous insert failed. Bail.
-                                 alert('No rows affected!');
-                                 return false;
-                              }
-                              else {
-                                return resultSet.insertId
-                              }
-                           });
+  var rstStudentObservations;
+  var qryStudentObservations = function (tx, results) {
+    tx.executeSql('SELECT * FROM studentObservations;', [], function (tx, rs) {
+      rstStudentObservations = rs;
+      return procStudentObservations(tx);
+    });
+  };
+
+  var procStudentObservations = function (tx) {
+    for (var i = 0; i < rstStudentObservations.rows.length; i++) {
+      var row = rstStudentObservations.rows.item(i);
+      var studentName = row.subjectName;
+      var classLocation = row.classLocation;
+      var activityDescription = row.activityDescription;
+      var date = new Date(Date.parse(row.observationDate));
+      var minutes = date.getUTCMinutes().toString();
+      if (minutes.length == 1) minutes = "0" + minutes;
+      var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
+        date.getFullYear() + " at " + date.getHours() +
+        ":" +  minutes;
+
+      var newStudentId;
+      tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
+        [studentName, studentName, shortDate], function(tx, rs) {
+          newStudentId = rs.insertId;
+          return true;
+        });
+
+      var newObservationId;
+      tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription) VALUES (?,?,?,?)',
+        [newStudentId, studentName, classLocation, activityDescription], function(tx, rs) {
+        newObservationId = rs.insertId;
+        return true;
+      });
 
 
-
-            var classLocation = row.classLocation;
-          });
-        } //end FOR Loop
-      },
-        errorHandler
-      ); //end executeSQL
     }
-  );   //end db.transaction
+  };
 }
 
 
@@ -120,6 +121,7 @@ function migrate_r1_to_r2() {
  * @param {string} strSql - SQL statement to execute
  */
 function tctExecuteSql(strSql){
+  console.table(strSql);
   console.log(strSql);
   db.transaction(function (transaction) {
           transaction.executeSql(strSql);
