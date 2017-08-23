@@ -111,7 +111,24 @@ function migrate_r1_to_r2() {
         return true;
       });
 
+      var rstIntervalData;
+      var qryIntervalData = function (tx, results) {
+        tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [row.id], function (tx, rs) {
+          rstIntervalData = rs;
+          return procIntervalData(tx);
+        });
+      };
 
+      var procIntervalData = function (tx) {
+        for (var i = 0; i < rstIntervalData.rows.length; i++) {
+          var recIntervalData = rstIntervalData.rows.item(i);
+
+          tx.executeSql('INSERT INTO IntervalData (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
+            [newObservationId, rstIntervalData.interval, rstIntervalData.target, rstIntervalData.onTask, rstIntervalData.OTM, rstIntervalData.OTV, rstIntervalData.OTP], function(tx, rs) {
+              return true;
+          });
+        }
+      };
     }
   };
 }
