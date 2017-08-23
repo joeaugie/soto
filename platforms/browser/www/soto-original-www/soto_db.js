@@ -88,13 +88,14 @@ function migrate_r1_to_r2() {
       var newStudentId;
       tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
         [studentName, studentName, shortDate], function(tx, rs) {
+          console.log("callback [insert into student] newStudentId: " + rs.insertId);
           newStudentId = rs.insertId;
           return true;
         });
 
       var newObservationId;
       tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription) VALUES (?,?,?,?)',
-        [newStudentId, studentName, classLocation, activityDescription], function(tx, rs) {
+        [newStudentId, classLocation, shortDate, activityDescription], function(tx, rs) {
         newObservationId = rs.insertId;
         return true;
       });
@@ -120,7 +121,7 @@ function migrate_r1_to_r2() {
     }
   };
   db.transaction(qryStudentObservations);
-  console.log("end   migrate_r1_to_r2()");  
+  console.log("end   migrate_r1_to_r2()");
 }
 
 
