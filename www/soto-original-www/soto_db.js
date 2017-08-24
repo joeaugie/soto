@@ -44,6 +44,12 @@ function init_db() {
               ' StudentId INTEGER NOT NULL, ' +
               ' Location TEXT NOT NULL, ' +
               ' DateObservation DATE NOT NULL DEFAULT CURRENT_DATE, ' +
+              ' OtCode1 TEXT NULL, ' +
+              ' OtCode2 TEXT NULL, ' +
+              ' OtCode3 TEXT NULL, ' +
+              ' OtCode4 TEXT NULL, ' +
+              ' OtCode5 TEXT NULL, ' +
+              ' OtCode6 TEXT NULL, ' +
               ' ActivityDescription TEXT NOT NULL );'
   tctExecuteSql(strSql);
 
@@ -53,12 +59,12 @@ function init_db() {
            ' IntervalNumber INT NOT NULL, ' +
            ' Target TEXT NOT NULL, ' +
            ' OnTask TEXT NOT NULL, ' +
-           ' OffTask_1 BOOLEAN NOT NULL, ' +
-           ' OffTask_2 BOOLEAN NOT NULL, ' +
-           ' OffTask_3 BOOLEAN NOT NULL, ' +
-           ' OffTask_4 BOOLEAN NOT NULL, ' +
-           ' OffTask_5 BOOLEAN NOT NULL, ' +
-           ' OffTask_6 BOOLEAN NOT NULL );'
+           ' OffTask_1 BOOLEAN NULL, ' +
+           ' OffTask_2 BOOLEAN NULL, ' +
+           ' OffTask_3 BOOLEAN NULL, ' +
+           ' OffTask_4 BOOLEAN NULL, ' +
+           ' OffTask_5 BOOLEAN NULL, ' +
+           ' OffTask_6 BOOLEAN NULL );'
   tctExecuteSql(strSql);
 }
 
@@ -77,9 +83,11 @@ function migrate_r1_to_r2() {
     console.log("entered migrate_StudentObservations()");
     for (var i = 0; i < rstStudentObservations.rows.length; i++) {
       var r1_obsv = rstStudentObservations.rows.item(i);
-        insert_NewStudent (tx, r1_obsv, insert_NewObservation);
-      }
-  }
+      insert_NewStudent (tx, r1_obsv, insert_NewObservation);
+    }
+    console.log("finished migrate_StudentObservations()");
+  };
+
   var insert_NewStudent = function (tx, r1_obsv, after_InsertNewStudent) {
     console.log("entered insert_NewStudent(" + r1_obsv.subjectName + ")");
     var newStudentId;
@@ -93,11 +101,11 @@ function migrate_r1_to_r2() {
 
     tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
       [studentName, studentName, shortDate], function(tx, rs) {
-        console.log("callback [insert into student] newStudentId: " + rs.insertId);
-        newStudentId = rs.insertId;
-        return after_InsertNewStudent(tx, newStudentId, r1_obsv, migrate_IntervalData);
-      });
-    }
+      console.log("callback [insert into student] newStudentId: " + rs.insertId);
+      newStudentId = rs.insertId;
+      return after_InsertNewStudent(tx, newStudentId, r1_obsv, qryIntervalData);
+    });
+  };
 
 
   var insert_NewObservation = function (tx, newStudentId, r1_obsv, after_InsertNewObservation) {
@@ -112,39 +120,40 @@ function migrate_r1_to_r2() {
       date.getFullYear() + " at " + date.getHours() +
       ":" +  minutes;
 
-    tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription) VALUES (?,?,?,?)',
-      [newStudentId, classLocation, shortDate, activityDescription], function(tx, rs) {
+    tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription, OtCode1, OtCode2, OtCode3) VALUES (?,?,?,?,?,?,?)',
+      [newStudentId, classLocation, shortDate, activityDescription, 'OTM', 'OTV', 'OTP'], function(tx, rs) {
       newObservationId = rs.insertId;
       return after_InsertNewObservation(tx, newObservationId, r1_obsv);
     });
   };
 
-  var migrate_IntervalData = function (tx, newObservationId, r1_obsv) {
-    console.log("entered migrate_IntervalData()");
-    var rstIntervalData;
-
-    /*
-    var qryIntervalData = function (tx, results) {
-      tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [r1_obsv.id], function (tx, rs) {
-        rstIntervalData = rs;
-        return procIntervalData(tx);
-      });
-    */
-    return true;
-    };
-
-  var insert_NewInterval = function (tx) {
-    for (var i = 0; i < rstIntervalData.rows.length; i++) {
-      var recIntervalData = rstIntervalData.rows.item(i);
-
-      tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?, ?, ?, ?, ?)',
-        [newObservationId, rstIntervalData.interval, rstIntervalData.target, rstIntervalData.onTask, rstIntervalData.OTM, rstIntervalData.OTV, rstIntervalData.OTP], function(tx, rs) {
-          return true;
-      });
-    }
+  var qryIntervalData = function (tx, newObservationId, r1_obsv) {
+    console.log("entered qryIntervalData(" + r1_obsv.id + ")");
+    tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [r1_obsv.id], function (tx, rs) {
+      console.log("callback [select from intervalData]");
+      return migrate_IntervalData(tx, newObservationId, rs);
+    });
   };
 
-  db.transaction(qryStudentObservations);
+  var migrate_IntervalData = function (tx, newObservationId, rstIntervalData){
+    console.log("entered migrate_IntervalData()");
+    for (var i = 0; i < rstIntervalData.rows.length; i++) {
+      var r1_interval = rstIntervalData.rows.item(i);
+      console.log("inserting interval record " + i + ", Interval #: " + r1_interval.interval + ", newObservationId: " + newObservationId)
+      insert_NewInterval (tx, newObservationId, r1_interval);
+    }
+    console.log("finished migrate_IntervalData()");;
+  };
+
+  var insert_NewInterval = function (tx, newObservationId, r1_interval) {
+      tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?,?,?,?,?)',
+        [newObservationId, r1_interval.interval, r1_interval.target, r1_interval.onTask, r1_interval.OTM, r1_interval.OTV, r1_interval.OTP], function(tx, rs) {
+          console.log("callback [insert into Interval] insertId: " + rs.insertId);
+          return true;
+      });
+  };
+
+  db.transaction(qryStudentObservations, txtTransactionErrorCallback);
   console.log("end   migrate_r1_to_r2()");
 }
 
@@ -158,4 +167,9 @@ function tctExecuteSql(strSql){
   db.transaction(function (transaction) {
           transaction.executeSql(strSql);
   });
+}
+
+function txtTransactionErrorCallback(error)
+{
+    alert('DB TRANSACTION ERROR!  Error was '+error.message+' (Code '+error.code+')');
 }
