@@ -1,60 +1,12 @@
-/* ****************************************************	*/
-/* Start New Observation, Record New Session			*/
-/* ****************************************************	*/
-
+/* *****************************************	*/
+/* Start New Observation, Record New Session	*/
+/* *****************************************	*/
 function initNewSessionsPanel(){
 	document.getElementById("subjectName").value="";
 	document.getElementById("classLocation").value="";
 	document.getElementById("activityDescription").value="";
 }
-function saveNewSession() {
-	var name = document.getElementById("subjectName").value;
-	var location = document.getElementById("classLocation").value;
-	var description = document.getElementById("activityDescription").value;
 
-	if (name == null || name == ""){
-		navigator.notification.alert ("Please enter the student's name",
-									  function nothing(){},
-									  'Required Field',
-									  'Ok');
-		return false;
-	}
-	if (location == null || location == ""){
-		navigator.notification.alert ('Please enter the class or location of this session',
-									  function nothing(){},
-									  'Required Field',
-									  'Ok');
-		return false;
-	}
-
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'INSERT INTO studentObservations (subjectName, classLocation, observationDate, activityDescription) VALUES (?, ?, ?, ?);',
-                [document.getElementById("subjectName").value,
-                 document.getElementById("classLocation").value,
-                 new Date(),
-                 document.getElementById("activityDescription").value],
-                function (transaction, result) {
-					currentInsertedRowID = result.insertId;
-                    // jQT.goTo('#recordSessionPanel', 'slide');
-										$.mobile.navigate( "#recordSessionPanel" );
-                },
-                errorHandler
-            );
-        }
-    );
-    return false;
-}
-
-function beginRecordingSession() {
-    if (!timer_is_on) {
-        timer_is_on = 1;
-        enableAllOnTaskFields();
-		document.getElementById('cancelRecordSession').style.display = "none";
-        timedCount();
-    }
-}
 function enableAllOnTaskFields() {
     document.getElementById("AET").disabled = false;
     document.getElementById("PET").disabled = false;
@@ -62,6 +14,57 @@ function enableAllOnTaskFields() {
     document.getElementById("OTV").disabled = false;
     document.getElementById("OTP").disabled = false;
 }
+
+function saveNewSession() {
+	var name = document.getElementById("subjectName").value;
+	var location = document.getElementById("classLocation").value;
+	var description = document.getElementById("activityDescription").value;
+
+	if (name == null || name == ""){
+		navigator.notification.alert ("Please enter the student's name",
+		  function nothing(){},
+		  'Required Field',
+		  'Ok');
+		return false;
+	}
+
+	if (location == null || location == ""){
+		navigator.notification.alert ('Please enter the class or location of this session',
+		  function nothing(){},
+		  'Required Field',
+		  'Ok');
+		return false;
+	}
+
+  db.transaction(
+    function (transaction) {
+      transaction.executeSql(
+        'INSERT INTO studentObservations (subjectName, classLocation, observationDate, activityDescription) VALUES (?, ?, ?, ?);',
+        [document.getElementById("subjectName").value,
+         document.getElementById("classLocation").value,
+         new Date(),
+         document.getElementById("activityDescription").value],
+         function (transaction, result) {
+	         currentInsertedRowID = result.insertId;
+            // jQT.goTo('#recordSessionPanel', 'slide');
+						$.mobile.navigate( "#recordSessionPanel" );
+          },
+          errorHandler
+      );
+    }
+  );
+  return false;
+}
+
+function beginRecordingSession() {
+  if (!timer_is_on) {
+    timer_is_on = 1;
+    enableAllOnTaskFields();
+	  document.getElementById('cancelRecordSession').style.display = "none";
+    timedCount();
+  }
+}
+
 function timedCount() {
 	var timer = INTERVAL_LENGTH;
 
@@ -80,6 +83,7 @@ function timedCount() {
 					} // nothing, vibrate not available
 				}
 			}
+
 			if (--timer < 0) {
 				// Start the next interval
 		      saveIntervalData(intervalTarget);
@@ -98,8 +102,10 @@ function timedCount() {
 					// Reset timer to INTERVAL_LENGTH
 					timer = INTERVAL_LENGTH;
       }
+
   }, 1000);
 }
+
 function saveIntervalData(_intervalTarget) {
     var _onTask;
     var _otm;
