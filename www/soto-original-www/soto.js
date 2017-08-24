@@ -1,8 +1,4 @@
 var db;
-// var jQT = $.jQTouch({
-// 	statusBar: 'black'
-// });
-
 var INTERVAL_LENGTH;
 var PEER_INTERVAL_FACTOR;
 var VIBRATE_NEW_INTERVALS;
@@ -75,57 +71,14 @@ $(document).ready(function () {
 		VIBRATE_NEW_INTERVALS = localStorage.vibrateNewIntervals;
 	} else VIBRATE_NEW_INTERVALS = true;
 
-    var shortName = 'SOA';
-    var version = '1.0';
-    var displayName = 'Student On-Task Observation';
-    var maxSize = 65536;
-    db = openDatabase(shortName, version, displayName, maxSize);
-
-/*
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'drop TABLE studentObservations;'
-            );
-        }
-    );
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'drop TABLE intervalData;'
-            );
-        }
-    );
-
-*/
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'CREATE TABLE IF NOT EXISTS studentObservations ' +
-                ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-                ' subjectName TEXT NOT NULL, ' +
-                ' classLocation TEXT NOT NULL, ' +
-                ' observationDate DATE NOT NULL, ' +
-                ' activityDescription TEXT NOT NULL );'
-            );
-        }
-    );
-
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'CREATE TABLE IF NOT EXISTS intervalData ' +
-                ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-				' soid INT NOT NULL, ' +
-                ' interval INT NOT NULL, ' +
-                ' target TEXT NOT NULL, ' +
-                ' onTask TEXT NOT NULL, ' +
-                ' OTM BOOLEAN NOT NULL, ' +
-                ' OTV BOOLEAN NOT NULL, ' +
-                ' OTP BOOLEAN NOT NULL );'
-            );
-        }
-    );
+  var shortName = 'SOA';
+  var version = '1.0';
+  var displayName = 'Student On-Task Observation';
+  var maxSize = 65536;
+  db = openDatabase(shortName, version, displayName, maxSize);
+	init_db_r1();
+	init_db();
+	migrate_r1_to_r2();
 	getStudentObservations();
 });
 
