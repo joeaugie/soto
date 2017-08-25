@@ -104,7 +104,13 @@
             <a class="button cancel" href="#home">Cancel</a>
         </div>
         <div class="new-observation">
-          <input type="text" placeholder="Subject Name" name="subjectName" id="subjectName" autocapitalize="on" autocorrect="off" autocomplete="off" />
+          <div class="listview-wrapper">
+            <!-- http://demos.jquerymobile.com/1.4.5/listview-autocomplete/ -->
+            <input id="subjectName" data-type="search" placeholder="Student name">
+            <ul class="listview" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#subjectName">
+              <li><a href="#">Acura</a></li><li><a href="#">Audi</a></li><li><a href="#">aBMW</a></li>
+            </ul>
+          </div>
           <input type="text" placeholder="Class Location" name="classLocation" id="classLocation" autocapitalize="on" autocorrect="off" autocomplete="off" />
           <input type="text" placeholder="Description of Activity" name="activityDescription" id="activityDescription" autocapitalize="on" autocorrect="off" autocomplete="off" />
           <a onclick="saveNewSession()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Next</a>
