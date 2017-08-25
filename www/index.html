@@ -86,6 +86,7 @@
         <ul data-role="listview" data-theme="b">
             <li class="arrow"><a href="#newSessionPanel"><img src="../css/images/icons-svg/action-white.svg" alt="New Observation" class="ui-li-icon ui-corner-none">New Observation</a></li>
             <li class="arrow"><a href="#viewSessionsPanel"><img src="../css/images/icons-svg/clock-white.svg" alt="Reports" class="ui-li-icon ui-corner-none">Reports</a></li>
+            <li class="arrow"><a href="#manageStudents"><img src="../css/images/icons-svg/user-white.svg" alt="Students" class="ui-li-icon ui-corner-none">Manage Students</a></li>
             <li class="arrow"><a href="#aboutPanel"><img src="../css/images/icons-svg/info-white.svg" alt="About" class="ui-li-icon ui-corner-none">About</a></li>
             <li class="arrow"><a href="#helpPanel"><img src="../css/images/icons-svg/alert-white.svg" alt="Help" class="ui-li-icon ui-corner-none">Help</a></li>
         </ul>
@@ -104,7 +105,13 @@
             <a class="button cancel" href="#home">Cancel</a>
         </div>
         <div class="new-observation">
-          <input type="text" placeholder="Subject Name" name="subjectName" id="subjectName" autocapitalize="on" autocorrect="off" autocomplete="off" />
+          <div class="listview-wrapper">
+            <!-- http://demos.jquerymobile.com/1.4.5/listview-autocomplete/ -->
+            <input id="subjectName" data-type="search" placeholder="Student name">
+            <ul class="listview" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#subjectName">
+              <li><a href="#">Acura</a></li><li><a href="#">Audi</a></li><li><a href="#">aBMW</a></li>
+            </ul>
+          </div>
           <input type="text" placeholder="Class Location" name="classLocation" id="classLocation" autocapitalize="on" autocorrect="off" autocomplete="off" />
           <input type="text" placeholder="Description of Activity" name="activityDescription" id="activityDescription" autocapitalize="on" autocorrect="off" autocomplete="off" />
           <a onclick="saveNewSession()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Next</a>
@@ -242,6 +249,25 @@
           </div>
 -->
       </div>
+    </div>
+    <div id="manageStudents" class="blink" data-role="page">
+        <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
+            <h1>Manage Students</h1>
+            <a class="button swap" href="#home" style="display:inherit;">Home</a>
+        </div>
+        <ul data-role="listview" data-theme="b">
+            <li class="arrow"><a onclick="manageStudent(id)">Student 1</a></li>
+            <li class="arrow"><a onclick="manageStudent(id)">Student 2</a></li>
+        </ul>
+    </div>
+    <div id="studentSessions" class="blink" data-role="page">
+        <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
+            <h1 id="studentName">Manage Students</h1>
+            <a class="button swap" href="#manageStudents" style="display:inherit;">All Students</a>
+        </div>
+        <div>
+          <h2>Student Data Goes Here</h2>
+        </div>
     </div>
     <div id="aboutPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
