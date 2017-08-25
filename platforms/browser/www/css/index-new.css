@@ -32,3 +32,12 @@
 .observationItem .ui-checkbox {
   width: 45px;
 }
+.listview-wrapper {
+  position: relative;
+  max-width: 100%;
+}
+.listview {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+}
