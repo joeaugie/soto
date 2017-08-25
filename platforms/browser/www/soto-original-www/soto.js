@@ -38,6 +38,8 @@ $(document).ready(function () {
 
 				  $('#viewSessionsPanel').bind('pageAnimationStart', getStudentObservations);
 
+					$('#manageStudents').bind('pageAnimationStart', getStudents);
+
 				  $('#newSessionPanel').bind('pageAnimationStart', initNewSessionsPanel);
 				  $('#newSessionPanel form').submit(saveNewSession);
 				  $('#recordSessionPanel form').submit(beginRecordingSession);
@@ -80,6 +82,7 @@ $(document).ready(function () {
 	init_db();
 	migrate_r1_to_r2();
 	getStudentObservations();
+	getStudents();
 });
 
 
@@ -151,10 +154,42 @@ function loadSettings() {
 }
 
 
+function getStudents() {
+	console.log("entered getStudents()");
+	qryStudents(loadStudents);
+	$('#manageStudents ul li:gt(0)').remove();
+	
+	console.log("exiting getStudents()");
+}
+
+function loadStudents(rs) {
+	console.log("entered loadStudents()");
+
+	for (var i = 0; i < rs.rows.length; i++) {
+		var rec = rs.rows.item(i);
+		// TASK - Refactor Student DB record map function on the Student class.
+		// var recStudent = new Student(rs.StudentId, rs.FirstName, rs.LastName, rs.DateOfBirth, rs.DateAdded);
+		var recStudent = new Student();
+		recStudent.mapStudent(rec);
+		recStudent.printStudent();
+
+		var newEntryRow = $('#savedStudentItem').clone();
+		newEntryRow.data('entryId', recStudent.StudentId);
+		newEntryRow.appendTo('#manageStudents ul');
+		newEntryRow.find('#savedStudentName').text(recStudent.FirstName + " " + recStudent.LastName);
+		newEntryRow.find('#savedStudentName').click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			getStudentDetails(clickedEntryId);
+		});
+	}
+	console.log("exiting loadStudents()");
+}
+
+
 /* ****************************************************	*/
 /* View Student Observations, Generate Reports			*/
 /* ****************************************************	*/
-
 function getStudentObservations() {
 	console.log("begin getStudentObservations()");
 

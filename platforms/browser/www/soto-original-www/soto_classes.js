@@ -21,6 +21,13 @@ function Student (_studentId, _firstName, _lastName, _dateOfBirth, _dateAdded) {
       ":" +  minutes;
   }
 
+  this.mapStudent = function(rec) {
+    this.FirstName = rec.FirstName;
+    this.LastName = rec.LastName;
+    this.DateOfBirth = rec.DateOfBirth;
+    this.DateAdded = rec.DateAdded;
+  }
+
   this.printStudent = function() {
     console.log("Student: " + this.FirstName + " " + this.LastName);
     console.log("Age    : " + this.getAge());
