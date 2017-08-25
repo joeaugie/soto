@@ -150,6 +150,20 @@ function migrate_r1_to_r2() {
   console.log("end   migrate_r1_to_r2()");
 }
 
+/** Select all Students
+ * @param processSelectStudents - Your callback function to handle the return of all students resultset.
+ */
+function qryStudents(processSelectStudents) {
+  console.log("entered qryStudents()");
+  db.transaction(function (tx) {
+    console.log("entered getStudents()");
+    tx.executeSql('SELECT * FROM Student;', [], function (tx, rs) {
+      console.log("callback [select from Student]");
+      return processSelectStudents(rs);
+    });
+  }, txtTransactionErrorCallback);
+  console.log("exiting qryStudents()");
+}
 
 /** Helper function to execute a SQL transaction
  * @param {string} strSql - SQL statement to execute
