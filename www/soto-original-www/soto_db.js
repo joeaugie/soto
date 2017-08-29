@@ -96,8 +96,32 @@ function qryStudents(processSelectStudents) {
       console.log("callback [select from Student]");
       return processSelectStudents(rs);
     });
-  }, txtTransactionErrorCallback);
+  }, tctTransactionErrorCallback);
   console.log("exiting qryStudents()");
+}
+
+/** Select Observations
+ * @param _studentId - Optional Integer when you want Observations for a given student id
+ * @param processSelectObservations - Your callback function to handle the return of all students resultset.
+ */
+function qryObservations(_studentId, processSelectObservations) {
+  console.log("entered qryObservations()");
+  db.transaction(function (tx) {
+    console.log("entered qryObservations() --> db.transaction()");
+    var strSql = 'SELECT o.ObservationId, o.StudentId, o.Location, o.DateObservation, \
+      o.ActivityDescription, o.OtCode1, o.OtCode2, o.OtCode3, o.OtCode4, o.OtCode5, o.OtCode6 \
+      s.FirstName, s.LastName, s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId '
+    var args = [];
+    if (Number.isInteger(_studentId)) {
+      strSql = strSql + 'WHERE StudentId = ?'
+      args.push(_studentId);
+    }
+    tx.executeSql(strSql, args, function (tx, rs) {
+      console.log("callback [select from Observations]");
+      return processSelectObservations(rs);
+    });
+  }, tctTransactionErrorCallback);
+  console.log("exiting qryObservations()");
 }
 
 /** Helper function to execute a SQL transaction
@@ -111,7 +135,7 @@ function tctExecuteSql(strSql){
   });
 }
 
-function txtTransactionErrorCallback(error)
+function tctTransactionErrorCallback(error)
 {
     alert('DB TRANSACTION ERROR!  Error was '+error.message+' (Code '+error.code+')');
 }

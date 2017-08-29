@@ -30,7 +30,7 @@ function migrate_r1_to_r2() {
       return migrate_StudentObservations(tx, rstStudentObservations);
     });
   };
-  db.transaction(qryStudentObservations, txtTransactionErrorCallback);
+  db.transaction(qryStudentObservations, tctTransactionErrorCallback);
   console.log("end   migrate_r1_to_r2()");
 }
 

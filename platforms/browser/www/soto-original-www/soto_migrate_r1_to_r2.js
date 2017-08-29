@@ -30,11 +30,22 @@ function migrate_r1_to_r2() {
       return migrate_StudentObservations(tx, rstStudentObservations);
     });
   };
-  db.transaction(qryStudentObservations, txtTransactionErrorCallback);
+  db.transaction(qryStudentObservations, tctTransactionErrorCallback);
   console.log("end   migrate_r1_to_r2()");
 }
 
 function migrate_StudentObservations (tx, rstStudentObservations){
+  console.log("entered migrate_StudentObservations()");
+  for (var i = 0; i < rstStudentObservations.rows.length; i++) {
+    var r1_obsv = rstStudentObservations.rows.item(i);
+    var recStudent = new Student();
+    recStudent.mapR1Student(r1_obsv);
+    insert_NewStudent (tx, recStudent, insert_NewObservation, r1_obsv);
+  }
+  console.log("finished migrate_StudentObservations()");
+}
+
+function process_NewStudent (tx, rstStudentObservations){
   console.log("entered migrate_StudentObservations()");
   for (var i = 0; i < rstStudentObservations.rows.length; i++) {
     var r1_obsv = rstStudentObservations.rows.item(i);
