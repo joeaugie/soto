@@ -32,12 +32,12 @@ var staticHREF;
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
+					$('#settings').on('click', loadSettings);
+				  $('#viewSessionsPanel').on('click', getStudentObservations);
+					$('#manageStudents').on('click', getStudents);
+				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
-				  $('#settings form').submit(saveSettings);
-				  $('#settings').bind('pageAnimationStart', loadSettings);
-				  $('#viewSessionsPanel').bind('pageAnimationStart', getStudentObservations);
-					$('#manageStudents').bind('pageAnimationStart', getStudents);
-				  $('#newSessionPanel').bind('pageAnimationStart', initNewSessionsPanel);
+          $('#settings form').submit(saveSettings);
 				  $('#newSessionPanel form').submit(saveNewSession);
 				  $('#recordSessionPanel form').submit(beginRecordingSession);
 
@@ -154,9 +154,7 @@ function loadSettings() {
 function getStudents() {
 	console.log("entered getStudents()");
 	qryStudents(loadStudents);
-
-	$('#manageStudents ul li:gt(0)').remove();
-
+	$('#manageStudents ul li:eq(0)').remove();
 	console.log("exiting getStudents()");
 }
 
