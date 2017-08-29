@@ -37,7 +37,7 @@ $(document).ready(function () {
 					$('#manageStudents').on('click', getStudents);
 				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
-					$('#settings form').submit(saveSettings);
+          $('#settings form').submit(saveSettings);
 				  $('#newSessionPanel form').submit(saveNewSession);
 				  $('#recordSessionPanel form').submit(beginRecordingSession);
 
@@ -79,7 +79,7 @@ $(document).ready(function () {
 	init_db();
 	migrate_r1_to_r2();
 	getStudentObservations();
-	getStudents();
+	//getStudents();
 });
 
 
@@ -187,57 +187,53 @@ function loadStudents(rs) {
 /* View Student Observations, Generate Reports			*/
 /* ****************************************************	*/
 function getStudentObservations() {
-	console.log("begin getStudentObservations()");
-
-    $('#viewSessionsPanel ul li:gt(0)').remove();
-
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql('SELECT * FROM studentObservations;',[],
-                function (transaction, result) {
-                    for (var i = 0; i < result.rows.length; i++) {
-                        var row = result.rows.item(i);
-                        var newEntryRow = $('#savedSessionItem').clone();
-						var date = new Date(Date.parse(row.observationDate));
-						var minutes = date.getUTCMinutes().toString();
-						if (minutes.length == 1) minutes = "0" + minutes;
-						var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + date.getHours() + ":" +  minutes;
-                        newEntryRow.removeAttr('style');
-                        newEntryRow.data('entryId', row.id);
-                        newEntryRow.appendTo('#viewSessionsPanel ul');
-                        newEntryRow.find('.subjectName').text(row.subjectName);
-                        newEntryRow.find('#classLocation').text(row.classLocation);
-                        newEntryRow.find('#observationDate').text(shortDate);
-                        newEntryRow.find('.subjectName').click(function () {
-                            var clickedEntry = $(this).parent();
-                            var clickedEntryId = clickedEntry.data('entryId');
-                            getObservationResults(clickedEntryId);
-						});
-                        newEntryRow.find('#classLocation').click(function () {
-                            var clickedEntry = $(this).parent();
-                            var clickedEntryId = clickedEntry.data('entryId');
-                            getObservationResults(clickedEntryId);
-						});
-                        newEntryRow.find('#observationDate').click(function () {
-                            var clickedEntry = $(this).parent();
-                            var clickedEntryId = clickedEntry.data('entryId');
-                            getObservationResults(clickedEntryId);
-						});
-                        newEntryRow.find('.delete').click(function () {
-                            var clickedEntry = $(this).parent();
-                            var clickedEntryId = clickedEntry.data('entryId');
-							if (confirm("Are you sure you want to DELETE this observation?") == true){
-	                            deleteEntryById(clickedEntryId);
-	                            clickedEntry.slideUp();
-							}
-                        });
-                    } //end FOR Loop
-                },
-                errorHandler
-            ); //end executeSQL
-        }
-    );   //end db.transaction
+	console.log("entered getStudentObservations()");
+	qryObservations(null, displayObservations);
+	console.log("exiting getStudentObservations()");
 }
+
+function displayObservations(result) {
+	console.log("entered displayObservations()");
+	$('#viewSessionsPanel ul li:gt(0)').remove();
+
+	for (var i = 0; i < result.rows.length; i++) {
+		var observation = new Observation(result.rows.item(i));
+		observation.printObservation();
+		var newEntryRow = $('#savedSessionItem').clone();
+		newEntryRow.removeAttr('style');
+		newEntryRow.data('entryId', observation.ObservationId);
+		newEntryRow.appendTo('#viewSessionsPanel ul');
+		newEntryRow.find('.subjectName').text(observation.Student.getFullName());
+		newEntryRow.find('#classLocation').text(observation.Location);
+		newEntryRow.find('#observationDate').text(observation.DateObservation);
+		newEntryRow.find('.subjectName').click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			getObservationResults(clickedEntryId);
+		});
+		newEntryRow.find('#classLocation').click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			getObservationResults(clickedEntryId);
+		});
+		newEntryRow.find('#observationDate').click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			getObservationResults(clickedEntryId);
+		});
+		newEntryRow.find('.delete').click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			if (confirm("Are you sure you want to DELETE this observation?") == true){
+											deleteEntryById(clickedEntryId);
+											clickedEntry.slideUp();
+			}
+		});
+	} //end FOR Loop
+	console.log("exiting displayObservations()");
+	//return true;
+}
+
 function deleteEntryById(id) {
     db.transaction(
 				   function (transaction) {
