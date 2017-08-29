@@ -78,7 +78,7 @@ $(document).ready(function () {
 	init_db_r1();
 	init_db();
 	migrate_r1_to_r2();
-	//getStudentObservations();
+	getStudentObservations();
 	//getStudents();
 });
 
@@ -195,16 +195,17 @@ function getStudentObservations() {
 }
 
 function displayObservations(result) {
-
+	console.log("entered displayObservations()");
 	$('#viewSessionsPanel ul li:gt(0)').remove();
 
 	for (var i = 0; i < result.rows.length; i++) {
 		var observation = new Observation(result.rows.item(i));
+		observation.printObservation();
 		var newEntryRow = $('#savedSessionItem').clone();
 		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', observation.ObservationId);
 		newEntryRow.appendTo('#viewSessionsPanel ul');
-		newEntryRow.find('.subjectName').text(observation.getFullName());
+		newEntryRow.find('.subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
 		newEntryRow.find('#observationDate').text(observation.DateObservation);
 		newEntryRow.find('.subjectName').click(function () {
@@ -231,7 +232,8 @@ function displayObservations(result) {
 			}
 		});
 	} //end FOR Loop
-	return true;
+	console.log("exiting displayObservations()");
+	//return true;
 }
 
 function deleteEntryById(id) {

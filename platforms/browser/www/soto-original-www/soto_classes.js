@@ -57,14 +57,15 @@ function Observation (row) {
   console.log("constructing new Observation...");
   this.ObservationId = row.ObservationId;
   this.StudentId = row.StudentId;
-  this.Student = new Student(row);
+  this.Student = new Student();
+  this.Student.mapStudent(row);
   this.Location = row.Location;
 
-  var date = new Date(Date.parse(row.DateObservation));
-  var minutes = date.getUTCMinutes().toString();
-  if (minutes.length == 1) minutes = "0" + minutes;
-  this.DateObservation = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + date.getHours() + ":" +  minutes;
-
+  //var date = new Date(Date.parse(row.DateObservation));
+  //var minutes = date.getUTCMinutes().toString();
+  //if (minutes.length == 1) minutes = "0" + minutes;
+  //this.DateObservation = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + date.getHours() + ":" +  minutes;
+  this.DateObservation = row.DateObservation;
   this.ActivityDescription;
   this.OtCode1 = row.OtCode1;
   this.OtCode2 = row.OtCode2;

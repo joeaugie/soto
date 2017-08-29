@@ -109,13 +109,18 @@ function qryObservations(_studentId, processSelectObservations) {
   db.transaction(function (tx) {
     console.log("entered qryObservations() --> db.transaction()");
     var strSql = 'SELECT o.ObservationId, o.StudentId, o.Location, o.DateObservation, \
-      o.ActivityDescription, o.OtCode1, o.OtCode2, o.OtCode3, o.OtCode4, o.OtCode5, o.OtCode6 \
-      s.FirstName, s.LastName, s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId '
+      o.ActivityDescription, o.OtCode1, o.OtCode2, o.OtCode3, o.OtCode4, o.OtCode5, o.OtCode6, \
+      s.FirstName, s.LastName, s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId ';
     var args = [];
     if (Number.isInteger(_studentId)) {
-      strSql = strSql + 'WHERE StudentId = ?'
+      console.log("   appending _studentId WHERE criteria.");
+      strSql = strSql + 'WHERE StudentId = ?';
       args.push(_studentId);
     }
+    else {
+      console.log("   _studentId is not a number.");
+    }
+    console.log("   strSql : " + strSql);
     tx.executeSql(strSql, args, function (tx, rs) {
       console.log("callback [select from Observations]");
       return processSelectObservations(rs);
