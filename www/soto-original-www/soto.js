@@ -79,7 +79,7 @@ $(document).ready(function () {
 	init_db();
 	migrate_r1_to_r2();
 	getStudentObservations();
-	//getStudents();
+	getStudents();
 });
 
 
@@ -154,13 +154,12 @@ function loadSettings() {
 function getStudents() {
 	console.log("entered getStudents()");
 	qryStudents(loadStudents);
-	$('#manageStudents ul li:eq(0)').remove();
 	console.log("exiting getStudents()");
 }
 
 function loadStudents(rs) {
 	console.log("entered loadStudents()");
-
+	$('#manageStudents ul li:eq(0)').remove();
 	for (var i = 0; i < rs.rows.length; i++) {
 		var rec = rs.rows.item(i);
 		// TASK - Refactor Student DB record map function on the Student class.
@@ -170,9 +169,10 @@ function loadStudents(rs) {
 		recStudent.printStudent();
 
 		var newEntryRow = $('#savedStudentItem').clone();
+		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
-		newEntryRow.find('#savedStudentName').text(recStudent.FirstName + " " + recStudent.LastName);
+		newEntryRow.find('#savedStudentName').text(recStudent.getFullName());
 		newEntryRow.find('#savedStudentName').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
