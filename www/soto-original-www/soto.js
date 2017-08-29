@@ -35,11 +35,8 @@ $(document).ready(function () {
 
 				  $('#settings form').submit(saveSettings);
 				  $('#settings').bind('pageAnimationStart', loadSettings);
-
 				  $('#viewSessionsPanel').bind('pageAnimationStart', getStudentObservations);
-
 					$('#manageStudents').bind('pageAnimationStart', getStudents);
-
 				  $('#newSessionPanel').bind('pageAnimationStart', initNewSessionsPanel);
 				  $('#newSessionPanel form').submit(saveNewSession);
 				  $('#recordSessionPanel form').submit(beginRecordingSession);
@@ -82,7 +79,7 @@ $(document).ready(function () {
 	init_db();
 	migrate_r1_to_r2();
 	getStudentObservations();
-	getStudents();
+	//getStudents();
 });
 
 
@@ -157,8 +154,9 @@ function loadSettings() {
 function getStudents() {
 	console.log("entered getStudents()");
 	qryStudents(loadStudents);
+
 	$('#manageStudents ul li:gt(0)').remove();
-	
+
 	console.log("exiting getStudents()");
 }
 

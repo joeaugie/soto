@@ -45,6 +45,17 @@ function migrate_StudentObservations (tx, rstStudentObservations){
   console.log("finished migrate_StudentObservations()");
 }
 
+function process_NewStudent (tx, rstStudentObservations){
+  console.log("entered migrate_StudentObservations()");
+  for (var i = 0; i < rstStudentObservations.rows.length; i++) {
+    var r1_obsv = rstStudentObservations.rows.item(i);
+    var recStudent = new Student();
+    recStudent.mapR1Student(r1_obsv);
+    insert_NewStudent (tx, recStudent, insert_NewObservation, r1_obsv);
+  }
+  console.log("finished migrate_StudentObservations()");
+}
+
 function qryIntervalData (tx, newObservationId, r1_obsv) {
   console.log("entered qryIntervalData(" + r1_obsv.id + ")");
   tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [r1_obsv.id], function (tx, rs) {

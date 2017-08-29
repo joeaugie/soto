@@ -82,7 +82,7 @@ $(document).ready(function () {
 	init_db();
 	migrate_r1_to_r2();
 	getStudentObservations();
-	getStudents();
+	//getStudents();
 });
 
 
@@ -158,7 +158,7 @@ function getStudents() {
 	console.log("entered getStudents()");
 	qryStudents(loadStudents);
 	$('#manageStudents ul li:gt(0)').remove();
-	
+
 	console.log("exiting getStudents()");
 }
 
