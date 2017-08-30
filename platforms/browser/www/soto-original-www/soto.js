@@ -37,7 +37,7 @@ $(document).ready(function () {
 					$('#manageStudents').on('click', getStudents);
 				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
-          $('#settings form').submit(saveSettings);
+					$('#settings form').submit(saveSettings);
 				  $('#newSessionPanel form').submit(saveNewSession);
 				  $('#recordSessionPanel form').submit(beginRecordingSession);
 
