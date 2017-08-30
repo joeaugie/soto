@@ -32,10 +32,10 @@ var staticHREF;
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
-					$('#settings').on('click', loadSettings);
-				  $('#viewSessionsPanel').on('click', getStudentObservations);
-					$('#manageStudents').on('click', getStudents);
-				  $('#newSessionPanel').on('click', initNewSessionsPanel);
+					$(document).on("pagebeforeshow","#settings",loadSettings);
+					$(document).on("pagebeforeshow","#viewSessionsPanel", getStudentObservations);
+					$(document).on("pagebeforeshow","#manageStudents", getStudents);
+					$(document).on("pagebeforeshow","#newSessionPanel", initNewSessionsPanel);
 
 					$('#settings form').submit(saveSettings);
 				  $('#newSessionPanel form').submit(saveNewSession);
