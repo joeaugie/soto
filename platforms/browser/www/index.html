@@ -188,12 +188,14 @@
             <h1>Sessions</h1>
             <a class="button back" href="#home">Back</a>
         </div>
-        <ul class="edgetoedge">
-            <li id="savedSessionItem" class="entry" style="display:none">
-                <span class="subjectName">Label</span>
-                <span class="delete">Delete</span>
-                <div  class="metaData" id="classLocation">000</div>
-                <div  class="metaData" id="observationDate">000</div>
+        <ul data-role="listview">
+            <li id="savedSessionItem" class="entry savedSessionItem" style="display:none">
+                <div class="sessionInfo">
+                  <div class="subjectName" id="subjectName">Label</div>
+                  <div class="metaData classLocation" id="classLocation">000</div>
+                  <div class="metaData observationDate" id="observationDate">000</div>
+                </div>
+                <a class="delete"data-role="button" data-icon="delete" data-iconpos="notext" data-theme="b" data-inline="true"></a>
             </li>
         </ul>
     </div>

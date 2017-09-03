@@ -203,10 +203,10 @@ function displayObservations(result) {
 		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', observation.ObservationId);
 		newEntryRow.appendTo('#viewSessionsPanel ul');
-		newEntryRow.find('.subjectName').text(observation.Student.getFullName());
+		newEntryRow.find('#subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
 		newEntryRow.find('#observationDate').text(observation.DateObservation);
-		newEntryRow.find('.subjectName').click(function () {
+		newEntryRow.find('#subjectName').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
 			getObservationResults(clickedEntryId);
