@@ -32,14 +32,15 @@ var staticHREF;
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
-					$(document).on("pagebeforeshow","#settings",loadSettings);
-					$(document).on("pagebeforeshow","#viewSessionsPanel", getStudentObservations);
-					$(document).on("pagebeforeshow","#manageStudents", getStudents);
-					$(document).on("pagebeforeshow","#newSessionPanel", initNewSessionsPanel);
 
-					$('#settings form').submit(saveSettings);
-				  $('#newSessionPanel form').submit(saveNewSession);
-				  $('#recordSessionPanel form').submit(beginRecordingSession);
+  $(document).on("pagebeforeshow","#settings",loadSettings);
+  $(document).on("pagebeforeshow","#viewSessionsPanel", getStudentObservations);
+  $(document).on("pagebeforeshow","#manageStudents", getStudents);
+  $(document).on("pagebeforeshow","#newSessionPanel", initNewSessionsPanel);
+
+  $('#settings form').submit(saveSettings);
+  $('#newSessionPanel form').submit(saveNewSession);
+  $('#recordSessionPanel form').submit(beginRecordingSession);
 
 
 
@@ -78,8 +79,8 @@ $(document).ready(function () {
 	init_db_r1();
 	init_db();
 	migrate_r1_to_r2();
-	getStudentObservations();
-	//getStudents();
+	// getStudentObservations();
+	// getStudents();
 });
 
 
@@ -154,13 +155,12 @@ function loadSettings() {
 function getStudents() {
 	console.log("entered getStudents()");
 	qryStudents(loadStudents);
-	$('#manageStudents ul li:eq(0)').remove();
 	console.log("exiting getStudents()");
 }
 
 function loadStudents(rs) {
 	console.log("entered loadStudents()");
-
+	$('#manageStudents ul li:eq(0)').remove();
 	for (var i = 0; i < rs.rows.length; i++) {
 		var rec = rs.rows.item(i);
 		// TASK - Refactor Student DB record map function on the Student class.
@@ -170,9 +170,10 @@ function loadStudents(rs) {
 		recStudent.printStudent();
 
 		var newEntryRow = $('#savedStudentItem').clone();
+		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
-		newEntryRow.find('#savedStudentName').text(recStudent.FirstName + " " + recStudent.LastName);
+		newEntryRow.find('#savedStudentName').text(recStudent.getFullName());
 		newEntryRow.find('#savedStudentName').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
