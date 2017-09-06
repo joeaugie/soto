@@ -188,19 +188,21 @@
             <h1>Sessions</h1>
             <a class="button back" href="#home">Back</a>
         </div>
-        <ul class="edgetoedge">
-            <li id="savedSessionItem" class="entry" style="display:none">
-                <span class="subjectName">Label</span>
-                <span class="delete">Delete</span>
-                <div  class="metaData" id="classLocation">000</div>
-                <div  class="metaData" id="observationDate">000</div>
+        <ul data-role="listview">
+            <li id="savedSessionItem" class="entry savedSessionItem" style="display:none">
+                <div class="sessionInfo">
+                  <div class="subjectName" id="subjectName">Label</div>
+                  <div class="metaData classLocation" id="classLocation">000</div>
+                  <div class="metaData observationDate" id="observationDate">000</div>
+                </div>
+                <a class="delete"data-role="button" data-icon="delete" data-iconpos="notext" data-theme="b" data-inline="true"></a>
             </li>
         </ul>
     </div>
     <div id="observationResultsPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
             <h1 id="reportTitle">Report</h1>
-            <a class="button back" href="#">Back</a>
+            <a class="button back" href="#viewSessionsPanel">Back</a>
         </div>
         <div class="reportSection" id="observationMetaData">
           <span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>

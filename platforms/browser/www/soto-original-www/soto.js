@@ -32,17 +32,15 @@ var staticHREF;
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
-					$('#settings').on('click', loadSettings);
-				  $('#viewSessionsPanel').on('click', function() {
-							console.log("entered $('#viewSessionsPanel').on('click', function()");
-							getStudentObservations();
-						});
-					$('#manageStudents').on('click', getStudents);
-				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
-					$('#settings form').submit(saveSettings);
-				  $('#newSessionPanel form').submit(saveNewSession);
-				  $('#recordSessionPanel form').submit(beginRecordingSession);
+  $(document).on("pagebeforeshow","#settings",loadSettings);
+  $(document).on("pagebeforeshow","#viewSessionsPanel", getStudentObservations);
+  $(document).on("pagebeforeshow","#manageStudents", getStudents);
+  $(document).on("pagebeforeshow","#newSessionPanel", initNewSessionsPanel);
+
+  $('#settings form').submit(saveSettings);
+  $('#newSessionPanel form').submit(saveNewSession);
+  $('#recordSessionPanel form').submit(beginRecordingSession);
 
 
 
@@ -206,10 +204,10 @@ function displayObservations(result) {
 		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', observation.ObservationId);
 		newEntryRow.appendTo('#viewSessionsPanel ul');
-		newEntryRow.find('.subjectName').text(observation.Student.getFullName());
+		newEntryRow.find('#subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
 		newEntryRow.find('#observationDate').text(observation.DateObservation);
-		newEntryRow.find('.subjectName').click(function () {
+		newEntryRow.find('#subjectName').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
 			getObservationResults(clickedEntryId);
