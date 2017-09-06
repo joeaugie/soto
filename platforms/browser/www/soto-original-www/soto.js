@@ -33,7 +33,10 @@ var staticHREF;
 
 $(document).ready(function () {
 					$('#settings').on('click', loadSettings);
-				  $('#viewSessionsPanel').on('click', getStudentObservations);
+				  $('#viewSessionsPanel').on('click', function() {
+							console.log("entered $('#viewSessionsPanel').on('click', function()");
+							getStudentObservations();
+						});
 					$('#manageStudents').on('click', getStudents);
 				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
@@ -78,8 +81,8 @@ $(document).ready(function () {
 	init_db_r1();
 	init_db();
 	migrate_r1_to_r2();
-	getStudentObservations();
-	getStudents();
+	// getStudentObservations();
+	// getStudents();
 });
 
 

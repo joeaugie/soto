@@ -33,7 +33,10 @@ var staticHREF;
 
 $(document).ready(function () {
 					$('#settings').on('click', loadSettings);
-				  $('#viewSessionsPanel').on('click', getStudentObservations);
+				  $('#viewSessionsPanel').on('click', function() {
+							console.log("entered $('#viewSessionsPanel').on('click', function()");
+							getStudentObservations();
+						});
 					$('#manageStudents').on('click', getStudents);
 				  $('#newSessionPanel').on('click', initNewSessionsPanel);
 
@@ -78,8 +81,8 @@ $(document).ready(function () {
 	init_db_r1();
 	init_db();
 	migrate_r1_to_r2();
-	getStudentObservations();
-	getStudents();
+	// getStudentObservations();
+	// getStudents();
 });
 
 
@@ -169,14 +172,14 @@ function loadStudents(rs) {
 		recStudent.printStudent();
 
 		var newEntryRow = $('#savedStudentItem').clone();
-		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
-		newEntryRow.find('#savedStudentName').text(recStudent.getFullName());
-		newEntryRow.find('#savedStudentName').click(function () {
+		newEntryRow.text(recStudent.getFullName());
+		newEntryRow.click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
 			getStudentDetails(clickedEntryId);
+			$.mobile.navigate("#modifyStudent");
 		});
 	}
 	console.log("exiting loadStudents()");
