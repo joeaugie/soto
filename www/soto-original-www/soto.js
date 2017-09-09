@@ -2,6 +2,7 @@ var db;
 var INTERVAL_LENGTH;
 var PEER_INTERVAL_FACTOR;
 var VIBRATE_NEW_INTERVALS;
+var AUTO_SEND_EMAILS;
 var yAxisDataPoint;
 var emailSubject;
 var emailMessage;
@@ -70,6 +71,10 @@ $(document).ready(function () {
 		VIBRATE_NEW_INTERVALS = localStorage.vibrateNewIntervals;
 	} else VIBRATE_NEW_INTERVALS = true;
 
+	if (localStorage.autoSendEmails != null && localStorage.autoSendEmails != "") {
+		AUTO_SEND_EMAILS = localStorage.autoSendEmails;
+	} else AUTO_SEND_EMAILS = true;
+
   var shortName = 'SOA';
   var version = '1.0';
   var displayName = 'Student On-Task Observation';
@@ -89,6 +94,7 @@ $(document).ready(function () {
 /* ****************************************************	*/
 
 function saveSettings() {
+	console.log("entered saveSettings()");
 	var newIntervalLength = parseInt($('#intervalLength').val());
 	var newPeerInterval = parseInt($('#peerInterval').val());
 	var newEmail = jQuery.trim($('#userEmail').val());
@@ -129,25 +135,29 @@ function saveSettings() {
 		localStorage.vibrateNewIntervals = false;
 	}
 
+	if (document.getElementById("autoSendEmails").checked == true) {
+		localStorage.autoSendEmails = true;
+	} else {
+		localStorage.autoSendEmails = false;
+	}
+
 	INTERVAL_LENGTH = parseInt(localStorage.intervalLength);
 	PEER_INTERVAL_FACTOR = parseInt(localStorage.peerInterval);
 	VIBRATE_NEW_INTERVALS = localStorage.vibrateNewIntervals;
+	AUTO_SEND_EMAILS = localStorage.autoSendEmails;
 	c = INTERVAL_LENGTH;
 	peerInterval = PEER_INTERVAL_FACTOR;
-    // jQT.goBack();
-		window.history.back();
-    return false;
+  // jQT.goBack();
+	window.history.back();
+	console.log("existing saveSettings()");
+  return false;
 }
 function loadSettings() {
-    $('#intervalLength').val(localStorage.intervalLength);
-    $('#peerInterval').val(localStorage.peerInterval);
-    $('#userEmail').val(localStorage.userEmail);
-	if (localStorage.vibrateNewIntervals == "true") {
-    	document.getElementById("vibrateNewIntervals").checked = true;
-	}
-	else {
-		document.getElementById("vibrateNewIntervals").checked = false;
-	}
+  $('#intervalLength').val(localStorage.intervalLength);
+  $('#peerInterval').val(localStorage.peerInterval);
+  $('#userEmail').val(localStorage.userEmail);
+	document.getElementById("vibrateNewIntervals").checked = (localStorage.vibrateNewIntervals == "true");
+	document.getElementById("autoSendEmails").checked = (localStorage.autoSendEmails == "true");
 }
 
 
