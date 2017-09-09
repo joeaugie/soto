@@ -159,7 +159,7 @@ function getStudents() {
 
 function loadStudents(rs) {
 	console.log("entered loadStudents()");
-	$('#manageStudents ul li:eq(0)').remove();
+	//$('#manageStudents ul li:eq(0)').remove();
 	for (var i = 0; i < rs.rows.length; i++) {
 		var rec = rs.rows.item(i);
 		// TASK - Refactor Student DB record map function on the Student class.
@@ -168,7 +168,8 @@ function loadStudents(rs) {
 		recStudent.mapStudent(rec);
 		recStudent.printStudent();
 
-		var newEntryRow = $('#savedStudentItem').clone();
+		//var newEntryRow = $('#savedStudentItem').clone();
+		var newEntryRow = $('#manageStudents ul li:eq(0)').clone();
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
 		newEntryRow.text(recStudent.getFullName());
@@ -179,6 +180,7 @@ function loadStudents(rs) {
 			$.mobile.navigate("#modifyStudent");
 		});
 	}
+	$('#manageStudents ul li:eq(0)').remove();
 	console.log("exiting loadStudents()");
 }
 
