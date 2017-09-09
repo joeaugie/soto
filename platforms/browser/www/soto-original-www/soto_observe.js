@@ -2,9 +2,38 @@
 /* Start New Observation, Record New Session	*/
 /* *****************************************	*/
 function initNewSessionsPanel(){
+	console.log("entered initNewSessionsPanel()");
+	qryStudents(loadSelectStudentCombo);
 	document.getElementById("subjectName").value="";
 	document.getElementById("classLocation").value="";
 	document.getElementById("activityDescription").value="";
+	console.log("exiting initNewSessionsPanel()");
+}
+
+function loadSelectStudentCombo(rs) {
+	console.log("entered loadSelectStudentCombo()");
+	//$('#newSessionPanel ul li:eq(0)').remove();
+	for (var i = 0; i < rs.rows.length; i++) {
+		var rec = rs.rows.item(i);
+		// TASK - Refactor Student DB record map function on the Student class.
+		// var recStudent = new Student(rs.StudentId, rs.FirstName, rs.LastName, rs.DateOfBirth, rs.DateAdded);
+		var recStudent = new Student();
+		recStudent.mapStudent(rec);
+		recStudent.printStudent();
+
+		var newEntryRow = $('#newSessionPanel ul li:eq(0)').clone();
+		newEntryRow.data('entryId', recStudent.StudentId);
+		newEntryRow.appendTo('#newSessionPanel ul');
+		newEntryRow.text(recStudent.getFullName());
+
+		/*newEntryRow.click(function () {
+			var clickedEntry = $(this).parent();
+			var clickedEntryId = clickedEntry.data('entryId');
+			getStudentDetails(clickedEntryId);
+			$.mobile.navigate("#modifyStudent");
+		});*/
+	}
+	console.log("exiting loadSelectStudentCombo()");
 }
 
 function enableAllOnTaskFields() {
