@@ -28,6 +28,7 @@ function init_db() {
               ' OtCode4 TEXT NULL, ' +
               ' OtCode5 TEXT NULL, ' +
               ' OtCode6 TEXT NULL, ' +
+              ' ObservationNotes TEXT NULL, ' +
               ' ActivityDescription TEXT NOT NULL );'
   tctExecuteSql(strSql);
 
@@ -42,7 +43,9 @@ function init_db() {
            ' OffTask_3 BOOLEAN NULL, ' +
            ' OffTask_4 BOOLEAN NULL, ' +
            ' OffTask_5 BOOLEAN NULL, ' +
-           ' OffTask_6 BOOLEAN NULL );'
+           ' OffTask_6 BOOLEAN NULL,' +
+           ' IntervalNotes TEXT NULL );'
+           
   tctExecuteSql(strSql);
 }
 
