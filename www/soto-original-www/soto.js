@@ -182,11 +182,11 @@ function loadStudents(rs) {
 		var newEntryRow = $('#manageStudents ul li:eq(0)').clone();
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
-		newEntryRow.text(recStudent.getFullName());
+		newEntryRow.children('a').text(recStudent.getFullName());
 		newEntryRow.click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			getStudentDetails(clickedEntryId);
+			//var clickedEntry = $(this).parent();
+			//var clickedEntryId = clickedEntry.data('entryId');
+			//getStudentDetails(clickedEntryId);
 			$.mobile.navigate("#modifyStudent");
 		});
 	}

@@ -22,16 +22,20 @@ function loadSelectStudentCombo(rs) {
 		recStudent.printStudent();
 
 		var newEntryRow = $('#newSessionPanel ul li:eq(0)').clone();
-		newEntryRow.data('entryId', recStudent.StudentId);
+		newEntryRow.data('entryid', recStudent.StudentId); // the entry id's are undefined?
 		newEntryRow.appendTo('#newSessionPanel ul');
 		newEntryRow.text(recStudent.getFullName());
 
-		/*newEntryRow.click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			getStudentDetails(clickedEntryId);
-			$.mobile.navigate("#modifyStudent");
-		});*/
+		newEntryRow.click(function () {
+			$("#subjectName").val($(this).text());
+			// hide them once one is selected
+			$('[data-role=listview]').children('li').addClass('ui-screen-hidden');
+
+			// var clickedEntry = $(this).parent();
+			// var clickedEntryId = clickedEntry.data('entryId');
+			// getStudentDetails(clickedEntryId);
+			// $.mobile.navigate("#modifyStudent");
+		});
 	}
 	console.log("exiting loadSelectStudentCombo()");
 }

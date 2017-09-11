@@ -92,9 +92,9 @@
             <li class="arrow"><a href="#aboutPanel"><img src="../css/images/icons-svg/info-white.svg" alt="About" class="ui-li-icon ui-corner-none">About</a></li>
             <li class="arrow"><a href="#helpPanel"><img src="../css/images/icons-svg/alert-white.svg" alt="Help" class="ui-li-icon ui-corner-none">Help</a></li>
         </ul>
-        <div data-role="footer">
-          <span class="copyright">Copyright (C) 2011 Monkey Apps</span>
-          <span class="copyright">http://monkeylikesit.com</span>
+        <div data-role="footer" data-position="fixed" class="copyrightinfo">
+          <span class="copyright">Copyright (C) <script>document.write(new Date().getFullYear())</script> Try Catch Throw</span>
+          <span class="copyright">http://trycatchthrow.co/soto</span>
         </div>
     </div>
     <div id="deviceready" class="blink" data-role="page">
@@ -111,9 +111,7 @@
             <!-- http://demos.jquerymobile.com/1.4.5/listview-autocomplete/ -->
             <input id="subjectName" data-type="search" placeholder="Student name">
             <ul class="listview" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#subjectName">
-              <li><a href="#">Acura</a></li>
-              <li><a href="#">Audi</a></li>
-              <li><a href="#">aBMW</a></li>
+              <li></li>
             </ul>
           </div>
           <input type="text" placeholder="Class Location" name="classLocation" id="classLocation" autocapitalize="on" autocorrect="off" autocomplete="off" />
@@ -182,8 +180,22 @@
                   <input id="recordSessionPanelEndButton" onclick="endRecordingSession()" type="button" name="end" value="End" />
                 </div>
             </fieldset>
+            <fieldset>
+              <input id="recordSessionIntervalNotesButton" type="button" value="Record Notes For Interval X" />
+            </fieldset>
           </div>
         </form>
+    </div>
+    <div id="intervalNotes" data-role="page">
+      <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
+          <h1>Notes For Interval X</h1>
+          <a class="button back" href="#recordSessionPanel">Back To Session</a>
+      </div>
+      <div class="ui-field-contain notes-form">
+        <label for="notes">Notes:</label>
+        <textarea name="notes" id="notes"></textarea>
+      </div>
+      <input id="saveNotes" type="button" name="saveNotes" value="Save" />
     </div>
     <div id="viewSessionsPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
@@ -262,7 +274,7 @@
             <a class="button swap" href="#home" style="display:inherit;">Home</a>
         </div>
         <ul data-role="listview" data-theme="b">
-            <li id="savedStudentItem" class="arrow"><a onclick="manageStudent(id)" id="savedStudentName">Student 1</a></li>
+            <li id="savedStudentItem"><a id="savedStudentName">Student 1</a></li>
         </ul>
     </div>
     <div id="studentSessions" class="blink" data-role="page">
@@ -273,6 +285,12 @@
         <div>
           <h2>Student Data Goes Here</h2>
         </div>
+    </div>
+    <div id="modifyStudent" class="blink" data-role="page">
+      <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
+          <h1 id="currentStudentHeader">Current Student</h1>
+          <a class="button swap" href="#manageStudents" style="display:inherit;">Back</a>
+      </div>
     </div>
     <div id="aboutPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
@@ -335,16 +353,16 @@
             <h1>Settings</h1>
             <a class="button cancel" href="#home">Cancel</a>
         </div>
-        <form method="post">
-            <ul class="rounded">
-                <li>Interval Length (in seconds)<input placeholder="Interval Length" type="text" name="intervalLength" id="intervalLength" /></li>
-                <li>Peer Interval<input placeholder="Peer Intervals" type="text" name="peerInterval" id="peerInterval" /></li>
-                <li>Default Email<input placeholder="your_email@school.edu" type="text" name="userEmail" id="userEmail" autocapitalize="false" /></li>
-                <li><input type="checkbox" name="autoSendEmails" id="autoSendEmails" /> Auto-Send Emails</li>
-                <li><input type="checkbox" name="vibrateNewIntervals" id="vibrateNewIntervals" /> Vibrate New Intervals</li>
-                <li><input type="submit" class="submit" name="action" value="Save Changes" /></li>
-            </ul>
-        </form>
+        <div class="settings-form">
+          <form method="post">
+              <label>Interval Length (in seconds)<input placeholder="Interval Length" type="text" name="intervalLength" id="intervalLength" /></label>
+              <label>Peer Interval<input placeholder="Peer Intervals" type="text" name="peerInterval" id="peerInterval" /></label>
+              <label>Default Email<input placeholder="your_email@school.edu" type="text" name="userEmail" id="userEmail" autocapitalize="false" /></label>
+              <label><input type="checkbox" name="autoSendEmails" id="autoSendEmails" /> Auto-Send Emails</label>
+              <label><input type="checkbox" name="vibrateNewIntervals" id="vibrateNewIntervals" /> Vibrate New Intervals</label>
+              <label><input type="submit" class="submit" name="action" value="Save Changes" /></label>
+          </form>
+        </div>
     </div>
 </body>
 

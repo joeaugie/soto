@@ -51,3 +51,16 @@
   flex: 1;
   padding: 20px;
 }
+.copyrightinfo {
+  padding: 5px 0;
+  text-align: center;
+  font-size: 12px;
+}
+.settings-form, .notes-form {
+  margin: 0 auto;
+  padding: 20px;
+  width: 80%;
+}
+.ui-field-contain {
+  border: none;
+}
