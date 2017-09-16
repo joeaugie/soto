@@ -2,26 +2,28 @@
 * @deprecated
 */
 function init_db_r1() {
-   tctExecuteSql('CREATE TABLE IF NOT EXISTS studentObservations ' +
-    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-    ' subjectName TEXT NOT NULL, ' +
-    ' classLocation TEXT NOT NULL, ' +
-    ' observationDate DATE NOT NULL, ' +
-    ' activityDescription TEXT NOT NULL );');
+  console.log("entered init_db_r1()");
+  tctExecuteSql('CREATE TABLE IF NOT EXISTS studentObservations ' +
+  ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+  ' subjectName TEXT NOT NULL, ' +
+  ' classLocation TEXT NOT NULL, ' +
+  ' observationDate DATE NOT NULL, ' +
+  ' activityDescription TEXT NOT NULL );');
 
-    tctExecuteSql('CREATE TABLE IF NOT EXISTS intervalData ' +
-      ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-      ' soid INT NOT NULL, ' +
-      ' interval INT NOT NULL, ' +
-      ' target TEXT NOT NULL, ' +
-      ' onTask TEXT NOT NULL, ' +
-      ' OTM BOOLEAN NOT NULL, ' +
-      ' OTV BOOLEAN NOT NULL, ' +
-      ' OTP BOOLEAN NOT NULL );');
+  tctExecuteSql('CREATE TABLE IF NOT EXISTS intervalData ' +
+    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+    ' soid INT NOT NULL, ' +
+    ' interval INT NOT NULL, ' +
+    ' target TEXT NOT NULL, ' +
+    ' onTask TEXT NOT NULL, ' +
+    ' OTM BOOLEAN NOT NULL, ' +
+    ' OTV BOOLEAN NOT NULL, ' +
+    ' OTP BOOLEAN NOT NULL );');
+    console.log("exiting init_db_r1()");
 }
 
 function migrate_r1_to_r2() {
-  console.log("begin migrate_r1_to_r2()");
+  console.log("entered migrate_r1_to_r2()");
 
   var qryStudentObservations = function (tx, rs) {
     console.log("entered qryStudentObservations()");
@@ -31,7 +33,7 @@ function migrate_r1_to_r2() {
     });
   };
   db.transaction(qryStudentObservations, tctTransactionErrorCallback);
-  console.log("end   migrate_r1_to_r2()");
+  console.log("exiting migrate_r1_to_r2()");
 }
 
 function migrate_StudentObservations (tx, rstStudentObservations){

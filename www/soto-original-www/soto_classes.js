@@ -1,17 +1,15 @@
 /** Student Business Class
   * @constructor
   */
-function Student (_studentId, _firstName, _lastName, _dateOfBirth, _dateAdded) {
-  console.log("constructing new Student...");
+function Student (_studentId, _studentName, _dateOfBirth, _dateAdded) {
+  console.log("instantiating Student");
   this.StudentId = _studentId
-  this.FirstName = _firstName;
-  this.LastName = _lastName;
+  this.StudentName = _studentName;
   this.DateOfBirth = _dateOfBirth;
   this.DateAdded = _dateAdded;
 
   this.mapR1Student = function(r1_obsv) {
-    this.FirstName = r1_obsv.subjectName;
-    this.LastName = r1_obsv.subjectName;
+    this.StudentName = r1_obsv.subjectName;
     this.DateOfBirth = null;
     var date = new Date(Date.parse(r1_obsv.observationDate));
     var minutes = date.getUTCMinutes().toString();
@@ -22,14 +20,13 @@ function Student (_studentId, _firstName, _lastName, _dateOfBirth, _dateAdded) {
   }
 
   this.mapStudent = function(rec) {
-    this.FirstName = rec.FirstName;
-    this.LastName = rec.LastName;
+    this.StudentName = rec.StudentName;
     this.DateOfBirth = rec.DateOfBirth;
     this.DateAdded = rec.DateAdded;
   }
 
   this.printStudent = function() {
-    console.log("Student: " + this.FirstName + " " + this.LastName);
+    console.log("Student: " + this.StudentName);
     console.log("Age    : " + this.getAge());
   }
 
@@ -45,16 +42,15 @@ function Student (_studentId, _firstName, _lastName, _dateOfBirth, _dateAdded) {
   }
 
   this.getFullName = function() {
-    return this.FirstName + " " + this.LastName;
+    return this.StudentName;
   }
-
 }
 
 /** Observation Business Class
   * @constructor
   */
 function Observation (row) {
-  console.log("constructing new Observation...");
+  console.log("instantiating Observation");
   this.ObservationId = row.ObservationId;
   this.StudentId = row.StudentId;
   this.Student = new Student();
@@ -71,7 +67,7 @@ function Observation (row) {
 
   this.printObservation = function() {
     console.log("Observation recorded on: " + this.DateObservation + " at " + this.Location);
-    console.log("Student: " + this.Student.FirstName + " " + this.Student.LastName);
+    console.log("Student: " + this.Student.StudentName);
     console.log("Age    : " + this.Student.getAge());
 
   }
