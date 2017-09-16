@@ -3,7 +3,7 @@
 */
 function init_db() {
   var strSql;
-
+  console.log("entered init_db()");
   // For development and testing purposes
   tctExecuteSql('DROP TABLE Student');
   tctExecuteSql('DROP TABLE Observation');
@@ -11,8 +11,7 @@ function init_db() {
 
   strSql = 'CREATE TABLE IF NOT EXISTS Student ' +
               ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-              ' FirstName TEXT NOT NULL, ' +
-              ' LastName TEXT NOT NULL, ' +
+              ' StudentName TEXT NOT NULL, ' +
               ' DateOfBirth DATE NULL, ' +
               ' DateAdded DATE NOT NULL DEFAULT CURRENT_DATE);'
   tctExecuteSql(strSql);
@@ -45,15 +44,16 @@ function init_db() {
            ' OffTask_5 BOOLEAN NULL, ' +
            ' OffTask_6 BOOLEAN NULL,' +
            ' IntervalNotes TEXT NULL );'
-           
+
   tctExecuteSql(strSql);
+  console.log("exiting init_db()");
 }
 
 function insert_NewStudent (tx, student, after_InsertNewStudent, r1_obsv) {
   console.log("entered insert_NewStudent()");
   student.printStudent();
-  tx.executeSql('INSERT INTO Student (FirstName, LastName, DateAdded) VALUES (?,?,?)',
-    [student.FirstName, student.LastName, student.DateAdded], function(tx, rs) {
+  tx.executeSql('INSERT INTO Student (StudentName, DateAdded) VALUES (?,?)',
+    [student.StudentName, student.DateAdded], function(tx, rs) {
     console.log("callback [insert into student] newStudentId: " + rs.insertId);
     student.StudentId = rs.insertId;
     return after_InsertNewStudent(tx, student, r1_obsv, qryIntervalData);
@@ -113,7 +113,7 @@ function qryObservations(_studentId, processSelectObservations) {
     console.log("entered qryObservations() --> db.transaction()");
     var strSql = 'SELECT o.ObservationId, o.StudentId, o.Location, o.DateObservation, \
       o.ActivityDescription, o.OtCode1, o.OtCode2, o.OtCode3, o.OtCode4, o.OtCode5, o.OtCode6, \
-      s.FirstName, s.LastName, s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId ';
+      s.StudentName,s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId ';
     var args = [];
     if (Number.isInteger(_studentId)) {
       console.log("   appending _studentId WHERE criteria.");
@@ -136,8 +136,7 @@ function qryObservations(_studentId, processSelectObservations) {
  * @param {string} strSql - SQL statement to execute
  */
 function tctExecuteSql(strSql){
-  console.table(strSql);
-  console.log(strSql);
+  console.log("tctExecuteSql(): " + strSql);
   db.transaction(function (transaction) {
           transaction.executeSql(strSql);
   });
@@ -145,5 +144,6 @@ function tctExecuteSql(strSql){
 
 function tctTransactionErrorCallback(error)
 {
-    alert('DB TRANSACTION ERROR!  Error was '+error.message+' (Code '+error.code+')');
+  console.log("tctTransactionErrorCallback | error code [" + error.code + "] | error message [" + error.message + "]")
+  alert('DB TRANSACTION ERROR!  Error was '+error.message+' (Code '+error.code+')');
 }
