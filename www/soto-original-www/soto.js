@@ -169,17 +169,17 @@ function getStudents() {
 
 function loadStudents(rs) {
 	console.log("entered loadStudents()");
-	//$('#manageStudents ul li:eq(0)').remove();
+
+	var newEntryTemplate = $('#manageStudents ul li:eq(0)').clone();
+	$('#manageStudents ul').empty();
+
 	for (var i = 0; i < rs.rows.length; i++) {
 		var rec = rs.rows.item(i);
-		// TASK - Refactor Student DB record map function on the Student class.
-		// var recStudent = new Student(rs.StudentId, rs.FirstName, rs.LastName, rs.DateOfBirth, rs.DateAdded);
 		var recStudent = new Student();
 		recStudent.mapStudent(rec);
 		recStudent.printStudent();
 
-		//var newEntryRow = $('#savedStudentItem').clone();
-		var newEntryRow = $('#manageStudents ul li:eq(0)').clone();
+		var newEntryRow = newEntryTemplate.clone();
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
 		newEntryRow.children('a').text(recStudent.getFullName());
@@ -190,7 +190,6 @@ function loadStudents(rs) {
 			$.mobile.navigate("#modifyStudent");
 		});
 	}
-	$('#manageStudents ul li:eq(0)').remove();
 	console.log("exiting loadStudents()");
 }
 
