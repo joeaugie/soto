@@ -163,11 +163,11 @@ function loadSettings() {
 
 function getStudents() {
 	console.log("entered getStudents()");
-	qryStudents(loadStudents);
+	qryStudents(null, loadStudents);
 	console.log("exiting getStudents()");
 }
 
-function loadStudents(rs) {
+function loadStudents(tx, rs) {
 	console.log("entered loadStudents()");
 
 	var newEntryTemplate = $('#manageStudents ul li:eq(0)').clone();
@@ -183,14 +183,38 @@ function loadStudents(rs) {
 		newEntryRow.data('entryId', recStudent.StudentId);
 		newEntryRow.appendTo('#manageStudents ul');
 		newEntryRow.children('a').text(recStudent.getFullName());
+		/*
 		newEntryRow.click(function () {
 			//var clickedEntry = $(this).parent();
 			//var clickedEntryId = clickedEntry.data('entryId');
 			//getStudentDetails(clickedEntryId);
+		});
+		*/
+		newEntryRow.click(function () {
+			getStudentDetails($(this).data('entryId'));
 			$.mobile.navigate("#modifyStudent");
 		});
+
 	}
 	console.log("exiting loadStudents()");
+}
+
+function getStudentDetails(_studentId){
+	console.log("entered getStudentDetails(_studentId: "+_studentId+")");
+	qryStudents(_studentId, displayStudentDetails);
+	console.log("exiting getStudentDetails(_studentId: "+_studentId+")");
+}
+
+function displayStudentDetails(tx, rs){
+	console.log("entered displayStudentDetails()");
+	var rec = rs.rows.item(0);
+	var recStudent = new Student();
+	recStudent.mapStudent(rec);
+	recStudent.printStudent();
+	$('#modifyStudent #studentName').val(recStudent.StudentName);
+	$('#modifyStudent #dateOfBirth').val(new Date(recStudent.DateOfBirth));
+	$('#modifyStudent #dateAdded').val(new Date(recStudent.DateAdded));
+	console.log("exiting displayStudentDetails()");
 }
 
 
