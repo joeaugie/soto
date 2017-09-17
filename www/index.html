@@ -291,6 +291,15 @@
           <h1 id="currentStudentHeader">Current Student</h1>
           <a class="button swap" href="#manageStudents" style="display:inherit;">Back</a>
       </div>
+      <div class="modify-student">
+        <label for="studentName">Name:</label>
+          <input type="text" placeholder="Student Name" name="studentName" id="studentName" autocapitalize="on" autocorrect="off" autocomplete="off" />
+        <label for="dateOfBirth">DOB:</label>
+          <input type="date" data-clear-btn="true" name="dateOfBirth" id="dateOfBirth" value="">
+        <label for="dateAdded">Date Added:</label>
+          <input type="datetime-local" data-clear-btn="false" name="dateAdded" id="dateAdded" value="">
+        <a onclick="saveStudent()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Save</a>
+      </div>
     </div>
     <div id="aboutPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">

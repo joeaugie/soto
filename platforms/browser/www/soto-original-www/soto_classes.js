@@ -20,14 +20,14 @@ function Student (_studentId, _studentName, _dateOfBirth, _dateAdded) {
   }
 
   this.mapStudent = function(rec) {
+    this.StudentId = rec.StudentId;
     this.StudentName = rec.StudentName;
     this.DateOfBirth = rec.DateOfBirth;
     this.DateAdded = rec.DateAdded;
   }
 
   this.printStudent = function() {
-    console.log("Student: " + this.StudentName);
-    console.log("Age    : " + this.getAge());
+    console.log("printStudent() ==> StudentId: "+ this.StudentId +" | StudentName: " + this.StudentName + " | Age: " + this.getAge() + " | Added on: " + this.DateAdded);
   }
 
   this.getAge = function(){
