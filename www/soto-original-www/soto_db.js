@@ -12,8 +12,8 @@ function init_db() {
   strSql = 'CREATE TABLE IF NOT EXISTS Student ' +
               ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
               ' StudentName TEXT NOT NULL, ' +
-              ' DateOfBirth DATE NULL, ' +
-              ' DateAdded DATE NOT NULL DEFAULT CURRENT_DATE);'
+              ' DateOfBirth TEXT NULL, ' +
+              ' DateAdded TEXT NOT NULL DEFAULT CURRENT_DATE);'
   tctExecuteSql(strSql);
 
   strSql = 'CREATE TABLE IF NOT EXISTS Observation ' +
@@ -88,16 +88,28 @@ function insert_NewInterval (tx, newObservationId, r1_interval) {
 }
 
 
-/** Select all Students
+/** Select specific or all Students
+ * @param _studentId - Optional Integer when you want a specific student id.  If it is NAN then select ALL students
  * @param processSelectStudents - Your callback function to handle the return of all students resultset.
  */
-function qryStudents(processSelectStudents) {
+function qryStudents(_studentId, processSelectStudents) {
   console.log("entered qryStudents()");
   db.transaction(function (tx) {
-    console.log("entered getStudents()");
-    tx.executeSql('SELECT * FROM Student;', [], function (tx, rs) {
+    console.log("executing qryStudents() --> db.transaction()");
+    var strSql = "SELECT * FROM Student ";
+    var args = [];
+    if (Number.isInteger(_studentId)) {
+      console.log("   appending _studentId WHERE criteria.");
+      strSql = strSql + 'WHERE StudentId = ?';
+      args.push(_studentId);
+    }
+    else {
+      console.log("   _studentId is not a number.  Selecting all students.");
+    }
+    console.log("   strSql : " + strSql + ", " + args);
+    tx.executeSql(strSql, args, function (tx, rs) {
       console.log("callback [select from Student]");
-      return processSelectStudents(rs);
+      return processSelectStudents(tx, rs);
     });
   }, tctTransactionErrorCallback);
   console.log("exiting qryStudents()");
@@ -110,7 +122,7 @@ function qryStudents(processSelectStudents) {
 function qryObservations(_studentId, processSelectObservations) {
   console.log("entered qryObservations()");
   db.transaction(function (tx) {
-    console.log("entered qryObservations() --> db.transaction()");
+    console.log("executing qryObservations() --> db.transaction()");
     var strSql = 'SELECT o.ObservationId, o.StudentId, o.Location, o.DateObservation, \
       o.ActivityDescription, o.OtCode1, o.OtCode2, o.OtCode3, o.OtCode4, o.OtCode5, o.OtCode6, \
       s.StudentName,s.DateOfBirth, s.DateAdded FROM Observation AS o INNER JOIN Student AS s ON o.StudentId = s.StudentId ';
