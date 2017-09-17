@@ -292,13 +292,14 @@
           <a class="button swap" href="#manageStudents" style="display:inherit;">Back</a>
       </div>
       <div class="modify-student">
+        <input type="hidden" name="modifyStudentId" id="modifyStudentId" />
         <label for="studentName">Name:</label>
-          <input type="text" placeholder="Student Name" name="studentName" id="studentName" autocapitalize="on" autocorrect="off" autocomplete="off" />
+          <input type="text" placeholder="Student Name" name="modifyStudentName" id="modifyStudentName" autocapitalize="on" autocorrect="off" autocomplete="off" />
         <label for="dateOfBirth">DOB:</label>
-          <input type="date" data-clear-btn="true" name="dateOfBirth" id="dateOfBirth" value="">
+          <input type="date" data-clear-btn="true" name="modifyDateOfBirth" id="modifyDateOfBirth" value="">
         <label for="dateAdded">Date Added:</label>
-          <input type="datetime-local" data-clear-btn="false" name="dateAdded" id="dateAdded" value="">
-        <a onclick="saveStudent()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Save</a>
+          <input type="datetime-local" data-clear-btn="false" name="modifyDateAdded" id="modifyDateAdded" value="">
+        <a onclick="modifySaveStudent()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Save</a>
       </div>
     </div>
     <div id="aboutPanel" data-role="page">

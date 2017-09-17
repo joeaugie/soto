@@ -144,14 +144,25 @@ function qryObservations(_studentId, processSelectObservations) {
   console.log("exiting qryObservations()");
 }
 
+function update_Student (_student) {
+  console.log("executing update_Student()");
+  var strSql = "UPDATE Student SET StudentName = ?, DateOfBirth = ? WHERE StudentId = ?";
+  var args = [_student.StudentName, _student.DateOfBirth, _student.StudentId];
+  console.log("   strSql : " + strSql + ", " + args);
+//  student.printStudent();
+  tctExecuteSql(strSql, args);
+}
+
+
+
 /** Helper function to execute a SQL transaction
  * @param {string} strSql - SQL statement to execute
  */
-function tctExecuteSql(strSql){
+function tctExecuteSql(strSql, args){
   console.log("tctExecuteSql(): " + strSql);
   db.transaction(function (transaction) {
-          transaction.executeSql(strSql);
-  });
+          transaction.executeSql(strSql, args);
+  }, tctTransactionErrorCallback);
 }
 
 function tctTransactionErrorCallback(error)

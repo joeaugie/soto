@@ -35,7 +35,7 @@ function Student (_studentId, _studentName, _dateOfBirth, _dateAdded) {
       return "No DOB. Age is unknown."
     }
     else {
-      var ageDifMs = Date.now() - this.DateOfBirth.getTime();
+      var ageDifMs = Date.now() - new Date(this.DateOfBirth).getTime();
       var ageDate = new Date(ageDifMs); // miliseconds from epoch
       return Math.abs(ageDate.getUTCFullYear() - 1970);
     }

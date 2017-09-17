@@ -211,12 +211,23 @@ function displayStudentDetails(tx, rs){
 	var recStudent = new Student();
 	recStudent.mapStudent(rec);
 	recStudent.printStudent();
-	$('#modifyStudent #studentName').val(recStudent.StudentName);
-	$('#modifyStudent #dateOfBirth').val(new Date(recStudent.DateOfBirth));
-	$('#modifyStudent #dateAdded').val(new Date(recStudent.DateAdded));
+	$('#modifyStudent #modifyStudentId').val(recStudent.StudentId);
+	$('#modifyStudent #modifyStudentName').val(recStudent.StudentName);
+	$('#modifyStudent #modifyDateOfBirth').val(recStudent.DateOfBirth);
+	$('#modifyStudent #modifyDateAdded').val(new Date(recStudent.DateAdded));
 	console.log("exiting displayStudentDetails()");
 }
 
+function modifySaveStudent(){
+	console.log("entered modifySaveStudent()");
+	var student = new Student($('#modifyStudent #modifyStudentId').val(),
+														$('#modifyStudent #modifyStudentName').val(),
+														$('#modifyStudent #modifyDateOfBirth').val(),
+														$('#modifyStudent #modifyDateAdded').val());
+
+	update_Student (student);
+	console.log("exiting modifySaveStudent()");
+}
 
 /* ****************************************************	*/
 /* View Student Observations, Generate Reports			*/
