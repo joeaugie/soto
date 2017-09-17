@@ -3,14 +3,14 @@
 /* *****************************************	*/
 function initNewSessionsPanel(){
 	console.log("entered initNewSessionsPanel()");
-	qryStudents(loadSelectStudentCombo);
+	qryStudents(null, loadSelectStudentCombo);
 	document.getElementById("subjectName").value="";
 	document.getElementById("classLocation").value="";
 	document.getElementById("activityDescription").value="";
 	console.log("exiting initNewSessionsPanel()");
 }
 
-function loadSelectStudentCombo(rs) {
+function loadSelectStudentCombo(tx, rs) {
 	console.log("entered loadSelectStudentCombo()");
 	//$('#newSessionPanel ul li:eq(0)').remove();
 	for (var i = 0; i < rs.rows.length; i++) {
