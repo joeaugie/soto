@@ -55,6 +55,8 @@ function insert_NewStudent (tx, student, after_InsertNewStudent) {
     [student.StudentName, student.DateAdded], function(tx, rs) {
     console.log("callback [insert into student] newStudentId: " + rs.insertId);
     student.StudentId = rs.insertId;
+    student.printStudent();
+    console.log("  after_InsertNewStudent: " + after_InsertNewStudent);
     return after_InsertNewStudent(tx, student);
   });
 }

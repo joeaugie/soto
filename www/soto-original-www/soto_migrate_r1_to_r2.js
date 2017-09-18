@@ -42,13 +42,21 @@ function migrate_StudentObservations (tx, rstStudentObservations){
     var r1_obsv = rstStudentObservations.rows.item(o);
     var recStudent = new Student();
     recStudent.mapR1Student(r1_obsv);
-    insert_NewStudent (tx, recStudent, function(tx, student){
+    console.log("  processing rstStudentObservations item: " + o + " | r1_obsv.id: " + r1_obsv.id);
+    insert_NewStudent (tx, recStudent, function(tx, _student){
+      console.log("callback of insert_NewStudent() | StudentId: " + _student.StudentId);
+      _student.printStudent();
       var recObservation = new Observation();
-      var rec_r1_obsv = r1_obsv;
-      recObservation.Student = student;
-      recObservation.mapR1Observation(rec_r1_obsv);
+      var r1_obsv_id = r1_obsv.id;
+      recObservation.Student = _student;
+      recObservation.mapR1Observation(r1_obsv);
       insert_NewObservation (tx, recObservation, function(tx, observation){
-        tx.executeSql('SELECT * FROM intervalData WHERE soid = ?;', [rec_r1_obsv.id], function (tx, rs) {
+        console.log("callback of insert_NewObservation() | ObservationId: " + observation.ObservationId);
+        var r1obsvid = r1_obsv_id;
+        var strSql = 'SELECT * FROM intervalData WHERE soid = ?;';
+        var args = [r1obsvid];
+        console.log('  strSql: ' + strSql + ", " + args);
+        tx.executeSql(strSql, args, function (tx, rs) {
           console.log("callback [select from intervalData]");
           return migrate_IntervalData(tx, observation.ObservationId, rs);
         });
@@ -85,7 +93,9 @@ function migrate_IntervalData (tx, newObservationId, rstIntervalData){
     var recInterval = new Interval();
     recInterval.ObservationId = newObservationId;
     recInterval.mapR1Interval(r1_interval);
-    insert_NewInterval (tx, recInterval, function(){});
+    insert_NewInterval (tx, recInterval, function(tx, interval){
+      console.log("callback of insert_NewInterval() | IntervalId: " + interval.IntervalId);
+    });
   }
   console.log("finished migrate_IntervalData()");;
 }
