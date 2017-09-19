@@ -59,10 +59,16 @@
 
     <!-- custom css -->
     <link rel="stylesheet" type="text/css" href="css/index-new.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.mobile.datepicker.css" />
 
     <!-- jquery, jquery mobile and app js -->
-    <script type="text/javascript" src="js\jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.5.js"></script>
+
+    <!-- datepicker -->
+    <script type="text/javascript" src="js/jquery.ui.datepicker.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile.datepicker.js"></script>
+
     <script type="text/javascript" src="soto-original-www/soto_classes.js"></script>
     <script type="text/javascript" src="soto-original-www/soto_migrate_r1_to_r2.js"></script>
     <script type="text/javascript" src="soto-original-www/soto_db.js"></script>
@@ -296,9 +302,9 @@
         <label for="studentName">Name:</label>
           <input type="text" placeholder="Student Name" name="modifyStudentName" id="modifyStudentName" autocapitalize="on" autocorrect="off" autocomplete="off" />
         <label for="dateOfBirth">DOB:</label>
-          <input type="date" data-clear-btn="true" name="modifyDateOfBirth" id="modifyDateOfBirth" value="">
+          <input data-role="date" data-clear-btn="true" name="modifyDateOfBirth" id="modifyDateOfBirth" value="">
         <label for="dateAdded">Date Added:</label>
-          <input type="datetime-local" data-clear-btn="false" name="modifyDateAdded" id="modifyDateAdded" value="">
+          <input data-role="date" data-clear-btn="false" name="modifyDateAdded" id="modifyDateAdded" value="">
         <a onclick="modifySaveStudent()" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-arrow-r">Save</a>
       </div>
     </div>

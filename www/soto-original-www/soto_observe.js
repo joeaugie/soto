@@ -29,7 +29,7 @@ function loadSelectStudentCombo(tx, rs) {
 		newEntryRow.click(function () {
 			$("#subjectName").val($(this).text());
 			// hide them once one is selected
-			$('[data-role=listview]').children('li').addClass('ui-screen-hidden');
+			$('#newSessionPanel [data-role=listview]').children('li').addClass('ui-screen-hidden');
 
 			// var clickedEntry = $(this).parent();
 			// var clickedEntryId = clickedEntry.data('entryId');
