@@ -49,41 +49,39 @@ function init_db() {
   console.log("exiting init_db()");
 }
 
-function insert_NewStudent (tx, student, after_InsertNewStudent, r1_obsv) {
+function insert_NewStudent (tx, student, after_InsertNewStudent) {
   console.log("entered insert_NewStudent()");
-  student.printStudent();
   tx.executeSql('INSERT INTO Student (StudentName, DateAdded) VALUES (?,?)',
     [student.StudentName, student.DateAdded], function(tx, rs) {
     console.log("callback [insert into student] newStudentId: " + rs.insertId);
     student.StudentId = rs.insertId;
-    return after_InsertNewStudent(tx, student, r1_obsv, qryIntervalData);
+    student.printStudent();
+    console.log("  after_InsertNewStudent: " + after_InsertNewStudent);
+    return after_InsertNewStudent(tx, student);
   });
 }
 
-function insert_NewObservation (tx, student, r1_obsv, after_InsertNewObservation) {
+function insert_NewObservation (tx, _observation, after_InsertNewObservation) {
   console.log("entered insert_NewObservation()");
-  var newObservationId;
-  var classLocation = r1_obsv.classLocation;
-  var activityDescription = r1_obsv.activityDescription;
-  var date = new Date(Date.parse(r1_obsv.observationDate));
-  var minutes = date.getUTCMinutes().toString();
-  if (minutes.length == 1) minutes = "0" + minutes;
-  var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" +
-    date.getFullYear() + " at " + date.getHours() +
-    ":" +  minutes;
 
-  tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, ActivityDescription, OtCode1, OtCode2, OtCode3) VALUES (?,?,?,?,?,?,?)',
-    [student.StudentId, classLocation, shortDate, activityDescription, 'OTM', 'OTV', 'OTP'], function(tx, rs) {
-    newObservationId = rs.insertId;
-    return after_InsertNewObservation(tx, newObservationId, r1_obsv);
+  tx.executeSql('INSERT INTO Observation (StudentId, Location, DateObservation, \
+    ActivityDescription, OtCode1, OtCode2, OtCode3) VALUES (?,?,?,?,?,?,?)',
+    [_observation.Student.StudentId, _observation.Location, _observation.DateObservation,
+     _observation.ActivityDescription, _observation.OtCode1, _observation.OtCode2,
+     _observation.OtCode3], function(tx, rs) {
+    _observation.ObservationId = rs.insertId;
+    return after_InsertNewObservation(tx, _observation);
   });
 }
 
-function insert_NewInterval (tx, newObservationId, r1_interval) {
-    tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?,?,?,?,?)',
-      [newObservationId, r1_interval.interval, r1_interval.target, r1_interval.onTask, r1_interval.OTM, r1_interval.OTV, r1_interval.OTP], function(tx, rs) {
+function insert_NewInterval (tx, _interval, after_InsertNewInterval) {
+    tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, \
+      OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?,?,?,?,?)',
+      [_interval.ObservationId, _interval.IntervalNumber, _interval.Target, _interval.OnTask,
+        _interval.OffTask_1, _interval.OffTask_2, _interval.OffTask_3], function(tx, rs) {
         console.log("callback [insert into Interval] insertId: " + rs.insertId);
-        return true;
+        _interval.IntervalId = rs.insertId;
+        return after_InsertNewInterval(tx, _interval);
     });
 }
 

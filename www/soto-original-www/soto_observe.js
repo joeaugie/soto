@@ -12,22 +12,24 @@ function initNewSessionsPanel(){
 
 function loadSelectStudentCombo(tx, rs) {
 	console.log("entered loadSelectStudentCombo()");
-	//$('#newSessionPanel ul li:eq(0)').remove();
+
+	var newEntryTemplate = 	$('#newSessionPanel ul li:eq(0)').clone();
+	$('#newSessionPanel ul').empty();
+
 	for (var i = 0; i < rs.rows.length; i++) {
 		var rec = rs.rows.item(i);
-		// TASK - Refactor Student DB record map function on the Student class.
-		// var recStudent = new Student(rs.StudentId, rs.FirstName, rs.LastName, rs.DateOfBirth, rs.DateAdded);
 		var recStudent = new Student();
 		recStudent.mapStudent(rec);
 		recStudent.printStudent();
 
-		var newEntryRow = $('#newSessionPanel ul li:eq(0)').clone();
-		newEntryRow.data('entryid', recStudent.StudentId); // the entry id's are undefined?
-		newEntryRow.appendTo('#newSessionPanel ul');
+		var newEntryRow = newEntryTemplate.clone();
+		newEntryRow.data('entryid', recStudent.StudentId);
 		newEntryRow.text(recStudent.getFullName());
+		newEntryRow.appendTo('#newSessionPanel ul');
 
 		newEntryRow.click(function () {
 			$("#subjectName").val($(this).text());
+			$("#subjectName").data('entryid', $(this).data('entryid'));
 			// hide them once one is selected
 			$('#newSessionPanel [data-role=listview]').children('li').addClass('ui-screen-hidden');
 
@@ -49,19 +51,21 @@ function enableAllOnTaskFields() {
 }
 
 function saveNewSession() {
-	var name = document.getElementById("subjectName").value;
-	var location = document.getElementById("classLocation").value;
-	var description = document.getElementById("activityDescription").value;
-
-	if (name == null || name == ""){
-		navigator.notification.alert ("Please enter the student's name",
+	console.log("executing saveNewSession()");
+	var newSessionStudentId = $("#newSessionPanel #subjectName").data('entryid');
+	var newSessionStudentName = $("#newSessionPanel #subjectName").val();
+	var newSessionClassLocation = $("#newSessionPanel #classLocation").val();
+	var newSessionStudentActivityDescription = $("#newSessionPanel #activityDescription").val();
+	console.log(newSessionStudentId + " | " + newSessionStudentName + " | " + newSessionClassLocation + " | " + newSessionStudentActivityDescription);
+	if (newSessionStudentName == null || newSessionStudentName == ""){
+		navigator.notification.alert ("Please select or enter a student's name",
 		  function nothing(){},
 		  'Required Field',
 		  'Ok');
 		return false;
 	}
 
-	if (location == null || location == ""){
+	if (newSessionClassLocation == null || newSessionClassLocation == ""){
 		navigator.notification.alert ('Please enter the class or location of this session',
 		  function nothing(){},
 		  'Required Field',
@@ -69,6 +73,7 @@ function saveNewSession() {
 		return false;
 	}
 
+	/*
   db.transaction(
     function (transaction) {
       transaction.executeSql(
@@ -86,6 +91,7 @@ function saveNewSession() {
       );
     }
   );
+	*/
   return false;
 }
 
