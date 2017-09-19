@@ -41,9 +41,10 @@ $.widget("mobile.date",{
 			// if not applicable, false to just disable them
 		navigationAsDateFormat: false, // True if date formatting applied to prev/today/next links
 		gotoCurrent: false, // True if today link goes back to current selection instead
-		changeMonth: false, // True if month can be selected directly, false if only prev/next
-		changeYear: false, // True if year can be selected directly, false if only prev/next
-		yearRange: "c-10:c+10", // Range of years to display in drop-down,
+		changeMonth: true, // True if month can be selected directly, false if only prev/next
+		changeYear: true,// True if year can be selected directly, false if only prev/next
+		dateFormat: "mm/dd/yy",
+		yearRange: "c-1:c+1", // Range of years to display in drop-down,
 			// either relative to today's year (-nn:+nn), relative to currently displayed year
 			// (c-nn:c+nn), absolute (nnnn:nnnn), or a combination of the above (nnnn:-n)
 		showOtherMonths: false, // True to show dates in other months, false to leave blank
@@ -51,7 +52,7 @@ $.widget("mobile.date",{
 		showWeek: false, // True to show week of the year, false to not show it
 		calculateWeek: this.iso8601Week, // How to calculate the week of the year,
 			// takes a Date and returns the number of the week for it
-		shortYearCutoff: "+10", // Short year values < this are in the current century,
+		shortYearCutoff: "+30", // Short year values < this are in the current century,
 			// > this are in the previous century,
 			// string value starting with "+" for current year + value
 		minDate: null, // The earliest selectable date, or null for no limit
@@ -73,8 +74,7 @@ $.widget("mobile.date",{
 		autoSize: false, // True to size the input for the date format, false to leave as is
 		disabled: false, // The initial disabled state
 		inline: false, // True to set the calendar always visible
-		theme: "a",
-		dateFormat: "mm/dd/yy"
+		theme: "a"
 	},
 	_getCreateOptions: function(){
 		$.extend( this.options, $.datepicker._defaults );
@@ -103,7 +103,7 @@ $.widget("mobile.date",{
 		}
 	},
 	setOption:function( key, value ){
-		this.baseWidget.datepicker( "option", key, value );
+		this.baseWidget.datepicker( "options", key, value );
 	},
 	getDate: function(){
 		return this.baseWidget.datepicker( "getDate" );
