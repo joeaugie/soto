@@ -89,6 +89,7 @@ function migrate_IntervalData (tx, newObservationId, rstIntervalData){
   console.log("entered migrate_IntervalData()");
   for (var i = 0; i < rstIntervalData.rows.length; i++) {
     var r1_interval = rstIntervalData.rows.item(i);
+<<<<<<< HEAD
     (function(r1_interval) {
       console.log("inserting interval record " + i + ", Interval #: " + r1_interval.interval + ", newObservationId: " + newObservationId)
       var recInterval = new Interval();
@@ -98,6 +99,15 @@ function migrate_IntervalData (tx, newObservationId, rstIntervalData){
         console.log("callback of insert_NewInterval() | IntervalId: " + interval.IntervalId);
       });
     })(r1_interval);
+=======
+    console.log("inserting interval record " + i + ", Interval #: " + r1_interval.interval + ", newObservationId: " + newObservationId)
+    var recInterval = new Interval();
+    recInterval.ObservationId = newObservationId;
+    recInterval.mapR1Interval(r1_interval);
+    insert_NewInterval (tx, recInterval, function(tx, interval){
+      console.log("callback of insert_NewInterval() | IntervalId: " + interval.IntervalId);
+    });
+>>>>>>> c803963b7ec7d003558c216e6b508b8c189f5581
   }
   console.log("finished migrate_IntervalData()");;
 }
