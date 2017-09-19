@@ -56,7 +56,7 @@
   text-align: center;
   font-size: 12px;
 }
-.settings-form, .notes-form {
+.settings-form, .notes-form, .modify-student {
   margin: 0 auto;
   padding: 20px;
   width: 80%;
