@@ -38,11 +38,30 @@ function migrate_r1_to_r2() {
 
 function migrate_StudentObservations (tx, rstStudentObservations){
   console.log("entered migrate_StudentObservations()");
-  for (var i = 0; i < rstStudentObservations.rows.length; i++) {
-    var r1_obsv = rstStudentObservations.rows.item(i);
+  for (var o = 0; o < rstStudentObservations.rows.length; o++) {
+    var r1_obsv = rstStudentObservations.rows.item(o);
     var recStudent = new Student();
     recStudent.mapR1Student(r1_obsv);
-    insert_NewStudent (tx, recStudent, insert_NewObservation, r1_obsv);
+    console.log("  processing rstStudentObservations item: " + o + " | r1_obsv.id: " + r1_obsv.id);
+    insert_NewStudent (tx, recStudent, function(tx, _student){
+      console.log("callback of insert_NewStudent() | StudentId: " + _student.StudentId);
+      _student.printStudent();
+      var recObservation = new Observation();
+      var r1_obsv_id = r1_obsv.id;
+      recObservation.Student = _student;
+      recObservation.mapR1Observation(r1_obsv);
+      insert_NewObservation (tx, recObservation, function(tx, observation){
+        console.log("callback of insert_NewObservation() | ObservationId: " + observation.ObservationId);
+        var r1obsvid = r1_obsv_id;
+        var strSql = 'SELECT * FROM intervalData WHERE soid = ?;';
+        var args = [r1obsvid];
+        console.log('  strSql: ' + strSql + ", " + args);
+        tx.executeSql(strSql, args, function (tx, rs) {
+          console.log("callback [select from intervalData]");
+          return migrate_IntervalData(tx, observation.ObservationId, rs);
+        });
+      });
+    });
   }
   console.log("finished migrate_StudentObservations()");
 }
@@ -71,7 +90,12 @@ function migrate_IntervalData (tx, newObservationId, rstIntervalData){
   for (var i = 0; i < rstIntervalData.rows.length; i++) {
     var r1_interval = rstIntervalData.rows.item(i);
     console.log("inserting interval record " + i + ", Interval #: " + r1_interval.interval + ", newObservationId: " + newObservationId)
-    insert_NewInterval (tx, newObservationId, r1_interval);
+    var recInterval = new Interval();
+    recInterval.ObservationId = newObservationId;
+    recInterval.mapR1Interval(r1_interval);
+    insert_NewInterval (tx, recInterval, function(tx, interval){
+      console.log("callback of insert_NewInterval() | IntervalId: " + interval.IntervalId);
+    });
   }
   console.log("finished migrate_IntervalData()");;
 }
