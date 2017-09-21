@@ -51,7 +51,7 @@ function enableAllOnTaskFields() {
 }
 
 function saveNewSession() {
-	console.log("executing saveNewSession()");
+	console.log("entered saveNewSession()");
 	var newSessionStudentId = $("#newSessionPanel #subjectName").data('entryid');
 	var newSessionStudentName = $("#newSessionPanel #subjectName").val();
 	var newSessionClassLocation = $("#newSessionPanel #classLocation").val();
@@ -79,14 +79,14 @@ function saveNewSession() {
 		qryStudents(newSessionStudentId, function(tx, rs){
 			var newObsv = new Observation();
 			newObsv.Student = new Student();
-			newObsv.Student.mapStudent(rs);
+			newObsv.Student.mapStudent(rs.rows.item(0));
 			newObsv.Location = newSessionClassLocation;
 			newObsv.ActivityDescription = newSessionStudentActivityDescription;
 			newObsv.DateObservation = new Date();
 			newObsv.OtCode1 = "OTM";
 	    newObsv.OtCode2 = "OTV";
 	    newObsv.OtCode3 = "OTP";
-			loadNewObservation(newObsv);
+			loadNewObservation(tx, newObsv);
 		})
 	}
 	else {
@@ -101,7 +101,7 @@ function saveNewSession() {
 				newObsv.OtCode1 = "OTM";
 		    newObsv.OtCode2 = "OTV";
 		    newObsv.OtCode3 = "OTP";
-				loadNewObservation(newObsv);
+				loadNewObservation(tx, newObsv);
 			});
 		}, tctTransactionErrorCallback);
 	}
@@ -126,16 +126,21 @@ function saveNewSession() {
     }
   );
 	*/
-  return false;
+	console.log("exiting saveNewSession()");
+	return true;
 }
 
 
-function loadNewObservation(newObservation){
-
-	if (newObservation instanceof Observation ){
-		currentInsertedRowID = newObservation.ObservationId;
-	}
-	$.mobile.navigate( "#recordSessionPanel" );
+function loadNewObservation(tx, newObservation){
+	console.log("entered loadNewObservation()");
+	insert_NewObservation (tx, newObservation, function(tx, newObservation){
+		if (newObservation instanceof Observation ){
+			console.log("  loading new Observation: " + newObservation.ObservationId);
+			currentInsertedRowID = newObservation.ObservationId;
+		}
+		$.mobile.navigate( "#recordSessionPanel" );
+	});
+	console.log("exiting loadNewObservation()");
 }
 
 
