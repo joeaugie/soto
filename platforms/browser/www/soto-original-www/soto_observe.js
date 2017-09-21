@@ -57,6 +57,8 @@ function saveNewSession() {
 	var newSessionClassLocation = $("#newSessionPanel #classLocation").val();
 	var newSessionStudentActivityDescription = $("#newSessionPanel #activityDescription").val();
 	console.log(newSessionStudentId + " | " + newSessionStudentName + " | " + newSessionClassLocation + " | " + newSessionStudentActivityDescription);
+
+
 	if (newSessionStudentName == null || newSessionStudentName == ""){
 		navigator.notification.alert ("Please select or enter a student's name",
 		  function nothing(){},
@@ -72,6 +74,38 @@ function saveNewSession() {
 		  'Ok');
 		return false;
 	}
+
+	if (newSessionStudentId) {
+		qryStudents(newSessionStudentId, function(tx, rs){
+			var newObsv = new Observation();
+			newObsv.Student = new Student();
+			newObsv.Student.mapStudent(rs);
+			newObsv.Location = newSessionClassLocation;
+			newObsv.ActivityDescription = newSessionStudentActivityDescription;
+			newObsv.DateObservation = new Date();
+			newObsv.OtCode1 = "OTM";
+	    newObsv.OtCode2 = "OTV";
+	    newObsv.OtCode3 = "OTP";
+			loadNewObservation(newObsv);
+		})
+	}
+	else {
+		db.transaction(function(tx, rs) {
+			var newStud = new Student(null, newSessionStudentName);
+			insert_NewStudent (tx, newStud, function(){
+				var newObsv = new Observation();
+				newObsv.Student = newStud;
+				newObsv.Location = newSessionClassLocation;
+				newObsv.ActivityDescription = newSessionStudentActivityDescription;
+				newObsv.DateObservation = new Date();
+				newObsv.OtCode1 = "OTM";
+		    newObsv.OtCode2 = "OTV";
+		    newObsv.OtCode3 = "OTP";
+				loadNewObservation(newObsv);
+			});
+		}, tctTransactionErrorCallback);
+	}
+
 
 	/*
   db.transaction(
@@ -94,6 +128,16 @@ function saveNewSession() {
 	*/
   return false;
 }
+
+
+function loadNewObservation(newObservation){
+
+	if (newObservation instanceof Observation ){
+		currentInsertedRowID = newObservation.ObservationId;
+	}
+	$.mobile.navigate( "#recordSessionPanel" );
+}
+
 
 function beginRecordingSession() {
   if (!timer_is_on) {
