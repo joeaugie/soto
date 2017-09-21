@@ -51,12 +51,14 @@ function enableAllOnTaskFields() {
 }
 
 function saveNewSession() {
-	console.log("executing saveNewSession()");
+	console.log("entered saveNewSession()");
 	var newSessionStudentId = $("#newSessionPanel #subjectName").data('entryid');
 	var newSessionStudentName = $("#newSessionPanel #subjectName").val();
 	var newSessionClassLocation = $("#newSessionPanel #classLocation").val();
 	var newSessionStudentActivityDescription = $("#newSessionPanel #activityDescription").val();
 	console.log(newSessionStudentId + " | " + newSessionStudentName + " | " + newSessionClassLocation + " | " + newSessionStudentActivityDescription);
+
+
 	if (newSessionStudentName == null || newSessionStudentName == ""){
 		navigator.notification.alert ("Please select or enter a student's name",
 		  function nothing(){},
@@ -72,6 +74,38 @@ function saveNewSession() {
 		  'Ok');
 		return false;
 	}
+
+	if (newSessionStudentId) {
+		qryStudents(newSessionStudentId, function(tx, rs){
+			var newObsv = new Observation();
+			newObsv.Student = new Student();
+			newObsv.Student.mapStudent(rs.rows.item(0));
+			newObsv.Location = newSessionClassLocation;
+			newObsv.ActivityDescription = newSessionStudentActivityDescription;
+			newObsv.DateObservation = new Date();
+			newObsv.OtCode1 = "OTM";
+	    newObsv.OtCode2 = "OTV";
+	    newObsv.OtCode3 = "OTP";
+			loadNewObservation(tx, newObsv);
+		})
+	}
+	else {
+		db.transaction(function(tx, rs) {
+			var newStud = new Student(null, newSessionStudentName);
+			insert_NewStudent (tx, newStud, function(){
+				var newObsv = new Observation();
+				newObsv.Student = newStud;
+				newObsv.Location = newSessionClassLocation;
+				newObsv.ActivityDescription = newSessionStudentActivityDescription;
+				newObsv.DateObservation = new Date();
+				newObsv.OtCode1 = "OTM";
+		    newObsv.OtCode2 = "OTV";
+		    newObsv.OtCode3 = "OTP";
+				loadNewObservation(tx, newObsv);
+			});
+		}, tctTransactionErrorCallback);
+	}
+
 
 	/*
   db.transaction(
@@ -92,8 +126,23 @@ function saveNewSession() {
     }
   );
 	*/
-  return false;
+	console.log("exiting saveNewSession()");
+	return true;
 }
+
+
+function loadNewObservation(tx, newObservation){
+	console.log("entered loadNewObservation()");
+	insert_NewObservation (tx, newObservation, function(tx, newObservation){
+		if (newObservation instanceof Observation ){
+			console.log("  loading new Observation: " + newObservation.ObservationId);
+			currentInsertedRowID = newObservation.ObservationId;
+		}
+		$.mobile.navigate( "#recordSessionPanel" );
+	});
+	console.log("exiting loadNewObservation()");
+}
+
 
 function beginRecordingSession() {
   if (!timer_is_on) {
