@@ -5,9 +5,11 @@ function init_db() {
   var strSql;
   console.log("entered init_db()");
   // For development and testing purposes
+  /*
   tctExecuteSql('DROP TABLE Student');
   tctExecuteSql('DROP TABLE Observation');
   tctExecuteSql('DROP TABLE Interval');
+  */
 
   strSql = 'CREATE TABLE IF NOT EXISTS Student ' +
               ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
