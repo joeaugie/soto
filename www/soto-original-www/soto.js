@@ -1,4 +1,5 @@
 var db;
+var IS_R1_MIGRATED;
 var INTERVAL_LENGTH;
 var PEER_INTERVAL_FACTOR;
 var VIBRATE_NEW_INTERVALS;
@@ -49,6 +50,14 @@ $(document).ready(function () {
 //				  $('body > *').css({minHeight: '460px !important'});
 //	}
 
+	if (localStorage.IS_R1_MIGRATED != null) {
+		IS_R1_MIGRATED = localStorage.IS_R1_MIGRATED;
+	}
+	else {
+		IS_R1_MIGRATED = false;
+		localStorage.IS_R1_MIGRATED = false;
+	}
+
 	if (localStorage.intervalLength != null && localStorage.intervalLength > 0) {
 		INTERVAL_LENGTH = parseInt(localStorage.intervalLength);
 	}
@@ -82,7 +91,14 @@ $(document).ready(function () {
   db = openDatabase(shortName, version, displayName, maxSize);
 	init_db_r1();
 	init_db();
-	migrate_r1_to_r2();
+	if (!IS_R1_MIGRATED) {
+		console.log("Migrating R1 data...")
+		migrate_r1_to_r2();
+	}
+	else {
+		console.log("R1 data has been migrated.")
+	}
+
 	// getStudentObservations();
 	// getStudents();
 });

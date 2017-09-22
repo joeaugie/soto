@@ -99,5 +99,7 @@ function migrate_IntervalData (tx, newObservationId, rstIntervalData){
       });
     })(r1_interval);
   }
+  IS_R1_MIGRATED = true;
+  localStorage.IS_R1_MIGRATED = true;
   console.log("finished migrate_IntervalData()");;
 }
