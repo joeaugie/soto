@@ -100,11 +100,11 @@ $(document).ready(function () {
 	else {
 		console.log("R1 data has been migrated.")
 	}
+	*/
 
 	// getStudentObservations();
 	// getStudents();
 });
-*/
 
 
 /* ****************************************************	*/
