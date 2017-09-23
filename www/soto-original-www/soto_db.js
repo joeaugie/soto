@@ -5,47 +5,62 @@ function init_db() {
   var strSql;
   console.log("entered init_db()");
   // For development and testing purposes
+  /*
   tctExecuteSql('DROP TABLE Student');
   tctExecuteSql('DROP TABLE Observation');
   tctExecuteSql('DROP TABLE Interval');
+  */
 
-  strSql = 'CREATE TABLE IF NOT EXISTS Student ' +
-              ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-              ' StudentName TEXT NOT NULL, ' +
-              ' DateOfBirth TEXT NULL, ' +
-              ' DateAdded TEXT NOT NULL DEFAULT CURRENT_DATE);'
-  tctExecuteSql(strSql);
+  db.transaction(function (transaction) {
+    var strSql =  'CREATE TABLE IF NOT EXISTS Student ' +
+                  ' (StudentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                  ' StudentName TEXT NOT NULL, ' +
+                  ' DateOfBirth TEXT NULL, ' +
+                  ' DateAdded TEXT NOT NULL DEFAULT CURRENT_DATE);'
+    console.log("  Creating Student table...");
+    transaction.executeSql(strSql, [], function(tx, rs){
+      var strSql = 'CREATE TABLE IF NOT EXISTS Observation ' +
+                  ' (ObservationId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                  ' StudentId INTEGER NOT NULL, ' +
+                  ' Location TEXT NOT NULL, ' +
+                  ' DateObservation DATE NOT NULL DEFAULT CURRENT_DATE, ' +
+                  ' OtCode1 TEXT NULL, ' +
+                  ' OtCode2 TEXT NULL, ' +
+                  ' OtCode3 TEXT NULL, ' +
+                  ' OtCode4 TEXT NULL, ' +
+                  ' OtCode5 TEXT NULL, ' +
+                  ' OtCode6 TEXT NULL, ' +
+                  ' ObservationNotes TEXT NULL, ' +
+                  ' ActivityDescription TEXT NOT NULL );'
+      console.log("  Creating Observation table...");
+      transaction.executeSql(strSql, [], function(tx, rs){
+        var strSql = 'CREATE TABLE IF NOT EXISTS Interval ' +
+                 ' (IntervalDataId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                 ' ObservationId INT NOT NULL, ' +
+                 ' IntervalNumber INT NOT NULL, ' +
+                 ' Target TEXT NOT NULL, ' +
+                 ' OnTask TEXT NOT NULL, ' +
+                 ' OffTask_1 BOOLEAN NULL, ' +
+                 ' OffTask_2 BOOLEAN NULL, ' +
+                 ' OffTask_3 BOOLEAN NULL, ' +
+                 ' OffTask_4 BOOLEAN NULL, ' +
+                 ' OffTask_5 BOOLEAN NULL, ' +
+                 ' OffTask_6 BOOLEAN NULL,' +
+                 ' IntervalNotes TEXT NULL );'
+        console.log("  Creating Interval table...");
+        transaction.executeSql(strSql, [], function(tx, rs){
+          if (IS_R1_MIGRATED === false) {
+        		console.log("  Migrating R1 data...")
+        		migrate_r1_to_r2();
+        	}
+        	else {
+        		console.log("  R1 data has been migrated.")
+        	}
+        });
+      });
+    });
+  }, tctTransactionErrorCallback);
 
-  strSql = 'CREATE TABLE IF NOT EXISTS Observation ' +
-              ' (ObservationId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-              ' StudentId INTEGER NOT NULL, ' +
-              ' Location TEXT NOT NULL, ' +
-              ' DateObservation DATE NOT NULL DEFAULT CURRENT_DATE, ' +
-              ' OtCode1 TEXT NULL, ' +
-              ' OtCode2 TEXT NULL, ' +
-              ' OtCode3 TEXT NULL, ' +
-              ' OtCode4 TEXT NULL, ' +
-              ' OtCode5 TEXT NULL, ' +
-              ' OtCode6 TEXT NULL, ' +
-              ' ObservationNotes TEXT NULL, ' +
-              ' ActivityDescription TEXT NOT NULL );'
-  tctExecuteSql(strSql);
-
-  strSql = 'CREATE TABLE IF NOT EXISTS Interval ' +
-           ' (IntervalDataId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-           ' ObservationId INT NOT NULL, ' +
-           ' IntervalNumber INT NOT NULL, ' +
-           ' Target TEXT NOT NULL, ' +
-           ' OnTask TEXT NOT NULL, ' +
-           ' OffTask_1 BOOLEAN NULL, ' +
-           ' OffTask_2 BOOLEAN NULL, ' +
-           ' OffTask_3 BOOLEAN NULL, ' +
-           ' OffTask_4 BOOLEAN NULL, ' +
-           ' OffTask_5 BOOLEAN NULL, ' +
-           ' OffTask_6 BOOLEAN NULL,' +
-           ' IntervalNotes TEXT NULL );'
-
-  tctExecuteSql(strSql);
   console.log("exiting init_db()");
 }
 
