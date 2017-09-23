@@ -50,12 +50,14 @@ $(document).ready(function () {
 //				  $('body > *').css({minHeight: '460px !important'});
 //	}
 
-	if (localStorage.IS_R1_MIGRATED != null) {
-		IS_R1_MIGRATED = localStorage.IS_R1_MIGRATED;
+	if (localStorage.isR1Migrated != null) {
+		IS_R1_MIGRATED = localStorage.isR1Migrated;
+		console.log("IS_R1_MIGRATED = " + IS_R1_MIGRATED);
+		console.log("localStorage.isR1Migrated = " + localStorage.isR1Migrated);
 	}
 	else {
 		IS_R1_MIGRATED = false;
-		localStorage.IS_R1_MIGRATED = false;
+		localStorage.isR1Migrated = false;
 	}
 
 	if (localStorage.intervalLength != null && localStorage.intervalLength > 0) {
@@ -92,17 +94,6 @@ $(document).ready(function () {
 	init_db_r1();
 	init_db();
 	// InsertR1TestData();
-
-	if (IS_R1_MIGRATED !== true) {
-		console.log("Migrating R1 data...")
-		migrate_r1_to_r2();
-	}
-	else {
-		console.log("R1 data has been migrated.")
-	}
-
-	// getStudentObservations();
-	// getStudents();
 });
 
 
