@@ -91,7 +91,7 @@ $(document).ready(function () {
   db = openDatabase(shortName, version, displayName, maxSize);
 	init_db_r1();
 	init_db();
-	InsertR1TestData();
+	//InsertR1TestData();
 	/*
 	if (!IS_R1_MIGRATED) {
 		console.log("Migrating R1 data...")
