@@ -91,16 +91,15 @@ $(document).ready(function () {
   db = openDatabase(shortName, version, displayName, maxSize);
 	init_db_r1();
 	init_db();
-	//InsertR1TestData();
-	/*
-	if (!IS_R1_MIGRATED) {
+	// InsertR1TestData();
+
+	if (IS_R1_MIGRATED !== true) {
 		console.log("Migrating R1 data...")
 		migrate_r1_to_r2();
 	}
 	else {
 		console.log("R1 data has been migrated.")
 	}
-	*/
 
 	// getStudentObservations();
 	// getStudents();
