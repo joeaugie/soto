@@ -302,7 +302,6 @@ function endRecordingSession() {
 					}, errorHandler);
 					*/
 				insert_NewInterval (tx, newInterval, function(){
-					console.log("  inserted new interval #: " + newInterval.IntervalNumber + " for Observation ID: " + newInterval.ObservationId);
 				});
 			}
 		});
