@@ -267,12 +267,22 @@ function endRecordingSession() {
 	  timer_is_on = 0;
 		document.getElementById('cancelRecordSession').style.display = "inline";
 		// Persist all interval data
-		db.transaction(function(transaction){
+		db.transaction(function(tx){
 			var sqlMassInsert="";
 
 			for (var i = 0; i < arInterval.length; i++) {
-				var sqlMassValues= new Array();
-				sqlMassInsert = "INSERT INTO intervalData (soid, interval, target, onTask, OTM, OTV, OTP) VALUES (?, ?, ?, ?, ?, ?, ?);";
+				var newInterval = new Interval();
+
+				newInterval.ObservationId = currentInsertedRowID;
+				newInterval.IntervalNumber = arInterval[i];
+				newInterval.Target = arTarget[i];
+				newInterval.OnTask = arOnTask[i];
+				newInterval.OffTask_1 = arOTM[i];
+				newInterval.OffTask_2 = arOTV[i];
+				newInterval.OffTask_3 = arOTP[i];
+
+				/*
+				sqlMassInsert = "INSERT INTO Interval (ObservationId, IntervalNumber, target, onTask, OTM, OTV, OTP) VALUES (?, ?, ?, ?, ?, ?, ?);";
 				sqlMassValues[0] = currentInsertedRowID;
 				sqlMassValues[1] = arInterval[i];
 				sqlMassValues[2] = arTarget[i];
@@ -280,7 +290,7 @@ function endRecordingSession() {
 				sqlMassValues[4] = arOTM[i];
 				sqlMassValues[5] = arOTV[i];
 				sqlMassValues[6] = arOTP[i];
-				transaction.executeSql(sqlMassInsert,sqlMassValues,
+				tx.executeSql(sqlMassInsert,sqlMassValues,
 					function(){
 					   arIndex=0;
 					   arInterval = new Array();
@@ -290,6 +300,10 @@ function endRecordingSession() {
 					   arOTV = new Array();
 					   arOTP = new Array();
 					}, errorHandler);
+					*/
+				insert_NewInterval (tx, newInterval, function(){
+					console.log("  inserted new interval #: " + newInterval.IntervalNumber + " for Observation ID: " + newInterval.ObservationId);
+				});
 			}
 		});
 		resetAllRecordingSessionFields();
