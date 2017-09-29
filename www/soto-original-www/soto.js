@@ -581,7 +581,7 @@ if (description.length == 0) description = "&nbsp;";
 
 	});
 
-	console.log("exiting getObservationResults( " + _obsv.StudentId + " )");
+	console.log("exiting getObservationResults( " + _obsv.Student.StudentId + " )");
 }
 function initCanvas(_canvas, _arrayLabels, _arrayDataPairs) {
 	var ctx;
