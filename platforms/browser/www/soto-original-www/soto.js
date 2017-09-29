@@ -312,6 +312,7 @@ if (description.length == 0) description = "&nbsp;";
 	document.getElementById('omdActivity').innerHTML = description;
 
 	qryIntervals(_obsv.ObservationId, function (result) {
+		console.group("entering anonymous callback of qryIntervals call in getObservationResults()");
 		var observation = _obsv;
 	  var subjectIntervals = 0;
 	  var subjectOnTask = 0;
@@ -578,7 +579,7 @@ if (description.length == 0) description = "&nbsp;";
 	 //document.getElementById("sendReportLink").onclick = "javascript:showEmailComposer(" + emailSubject + "," + emailMessage + "," + "jjcalo@yahoo.com" + ", nil, nil, YES);";
 
 
-
+		console.groupEnd();
 	});
 
 	console.log("exiting getObservationResults( " + _obsv.Student.StudentId + " )");
