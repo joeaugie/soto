@@ -84,45 +84,45 @@
             </ul>
         </div>
         <div id="observationResultsPanel">
-            <div class="toolbar">
-                <h1 id="reportTitle">Report</h1>
-                <a class="button back" href="#">Back</a>
-            </div>
-			<div class="reportSection" id="observationMetaData">
-				<span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>
-				<span class="reportLabel">Date: </span><span class="reportValue" id="omdDate">&nbsp;</span>
-				<span class="reportLabel">Activity: </span><span class="reportValue" id="omdActivity">foo</span>
-			</div>
-            <div class="reportSection" id="emailReport">
-				<span class="reportLabel">Email: </span><span class="reportValue" id="omdSendReport">
-				<input id="sendReportButton" onclick="sendReport()" type="button" name="pause" value="Send Report" />
-				<!-- a id="sendReportLink" href="#" onclick="sendReport()" >Send this report</a--></span>
-            </div>
-			<div class="reportSection" id="summaryTable">
-				<div id="reportDataContainer">
-					<p>								<span class="reportRowHeader"	 id="empty"></span>						<span class="reportColumnHeader subjectData" id="reportHeaderSubject">Subject</span>	<span class="reportColumnHeader peerData"	id="reportHeaderPeer">Peer</span>	</p>
-					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOnTask">On-Task</span>	<span class="reportColumnData subjectData" id="reportDataOnTaskSubject"></span>			<span class="reportColumnData peerData"		id="reportDataOnTaskPeer"></span>	</p>
-					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelAET">AET</span>			<span class="reportColumnSubData subjectData" id="reportDataAETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataAETPeer"></span>		</p>
-					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelPET">PET</span>			<span class="reportColumnSubData subjectData" id="reportDataPETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataPETPeer"></span>		</p>
-					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOffTask">Off-Task</span><span class="reportColumnData subjectData" id="reportDataOffTaskSubject"></span>		<span class="reportColumnData peerData"		id="reportDataOffTaskPeer"></span>	</p>
-					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTM">OTM</span>			<span class="reportColumnSubData subjectData" id="reportDataOTMSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTMPeer"></span>		</p>
-					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTV">OTV</span>			<span class="reportColumnSubData subjectData" id="reportDataOTVSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTVPeer"></span>		</p>
-					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTP">OTP</span>			<span class="reportColumnSubData subjectData" id="reportDataOTPSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTPPeer"></span>		</p>
-				</div>
-			</div>
-            <div class="reportSection">
-			    <div class="chartContainer" style="color:white; text-align:center;">
-					<span class="chartTitle">On-Task / Off-Task</span>
-				    <canvas id="can" height="200" width="280" style="border:'red 1px solid'"></canvas>
-				</div>
-			    <div class="chartContainer" style="color:white; text-align:center;">
-					<span class="chartTitle">AET / PET</span>
-				    <canvas id="onTaskCanvas" height="200" width="280"></canvas>
-            	</div>
-			    <div class="chartContainer" style="color:white; text-align:center;">
-					<span class="chartTitle">OTM / OTV / OTP</span>
-				    <canvas id="offTaskCanvas" height="200" width="280"></canvas>
-				</div>
+          <div class="toolbar">
+              <h1 id="reportTitle">Report</h1>
+              <a class="button back" href="#">Back</a>
+          </div>
+    			<div class="reportSection" id="observationMetaData">
+    				<span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>
+    				<span class="reportLabel">Date: </span><span class="reportValue" id="omdDate">&nbsp;</span>
+    				<span class="reportLabel">Activity: </span><span class="reportValue" id="omdActivity">foo</span>
+    			</div>
+          <div class="reportSection" id="emailReport">
+    				<span class="reportLabel">Email: </span><span class="reportValue" id="omdSendReport">
+    				<input id="sendReportButton" onclick="sendReport()" type="button" name="pause" value="Send Report" />
+    				<!-- a id="sendReportLink" href="#" onclick="sendReport()" >Send this report</a--></span>
+          </div>
+    			<div class="reportSection" id="summaryTable">
+    				<div id="reportDataContainer">
+    					<p>								<span class="reportRowHeader"	 id="empty"></span>						<span class="reportColumnHeader subjectData" id="reportHeaderSubject">Subject</span>	<span class="reportColumnHeader peerData"	id="reportHeaderPeer">Peer</span>	</p>
+    					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOnTask">On-Task</span>	<span class="reportColumnData subjectData" id="reportDataOnTaskSubject"></span>			<span class="reportColumnData peerData"		id="reportDataOnTaskPeer"></span>	</p>
+    					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelAET">AET</span>			<span class="reportColumnSubData subjectData" id="reportDataAETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataAETPeer"></span>		</p>
+    					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelPET">PET</span>			<span class="reportColumnSubData subjectData" id="reportDataPETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataPETPeer"></span>		</p>
+    					<p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOffTask">Off-Task</span><span class="reportColumnData subjectData" id="reportDataOffTaskSubject"></span>		<span class="reportColumnData peerData"		id="reportDataOffTaskPeer"></span>	</p>
+    					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTM">OTM</span>			<span class="reportColumnSubData subjectData" id="reportDataOTMSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTMPeer"></span>		</p>
+    					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTV">OTV</span>			<span class="reportColumnSubData subjectData" id="reportDataOTVSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTVPeer"></span>		</p>
+    					<p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTP">OTP</span>			<span class="reportColumnSubData subjectData" id="reportDataOTPSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTPPeer"></span>		</p>
+    				</div>
+    			</div>
+          <div class="reportSection">
+  			    <div class="chartContainer" style="color:white; text-align:center;">
+			        <span class="chartTitle">On-Task / Off-Task</span>
+  				    <canvas id="can" height="200" width="280" style="border:'red 1px solid'"></canvas>
+  				  </div>
+  			    <div class="chartContainer" style="color:white; text-align:center;">
+      				<span class="chartTitle">AET / PET</span>
+  				    <canvas id="onTaskCanvas" height="200" width="280"></canvas>
+          	</div>
+  			    <div class="chartContainer" style="color:white; text-align:center;">
+    					<span class="chartTitle">OTM / OTV / OTP</span>
+  				    <canvas id="offTaskCanvas" height="200" width="280"></canvas>
+    				</div>
 <!--
 	            <div class="reportSection">
 					<h1 class="reportHeader">Raw Data</h1>
@@ -137,7 +137,7 @@
 	            </div>
 -->
         	</div>
-		</div>
+    		</div>
         <div id="aboutPanel">
             <div class="toolbar">
                 <h1>About</h1>
