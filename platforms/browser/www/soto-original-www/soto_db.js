@@ -157,6 +157,28 @@ function qryObservations(_studentId, processSelectObservations) {
   console.log("exiting qryObservations()");
 }
 
+
+/** Select Observation Intervals
+ * @param _observationId - Optional Integer when you want Observations for a given student id
+ * @param processSelectIntervals - Your callback function to handle the return of all students resultset.
+ */
+function qryIntervals(_observationId, processSelectIntervals) {
+  console.log("entered qryIntervals()");
+  db.transaction(function (tx) {
+    console.log("executing qryIntervals() --> db.transaction()");
+    var strSql = 'SELECT * FROM Interval WHERE ObservationId = ? ';
+    var args = [_observationId];
+    console.log("   strSql : " + strSql);
+    tx.executeSql(strSql, args, function (tx, rs) {
+      console.log("callback [select from Interval]");
+      return processSelectIntervals(rs);
+    });
+  }, tctTransactionErrorCallback);
+  console.log("exiting qryIntervals()");
+}
+
+
+
 function update_Student (_student) {
   console.log("executing update_Student()");
   var strSql = "UPDATE Student SET StudentName = ?, DateOfBirth = ? WHERE StudentId = ?";
