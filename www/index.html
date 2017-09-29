@@ -64,6 +64,9 @@
     <!-- jquery, jquery mobile and app js -->
     <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.5.js"></script>
+    <script type="text/javascript" src="js/moment.js">
+
+    </script>
 
     <!-- datepicker -->
     <script type="text/javascript" src="js/jquery.ui.datepicker.js"></script>
@@ -137,7 +140,7 @@
             <div class="ui-block-a intervalNumberLabel">
               <!-- Interval Count / Peer vs Student Labels -->
               <div id="intervalHeaderText">
-                <h4>Interval Number</h4>
+                <h4><strong style='color:red;'>Student</strong> Interval Number</h4>
                 <span class="digits waitingToStart">0</span>
               </div>
             </div>
@@ -148,7 +151,9 @@
                 <span class="digits waitingToStart">0</span>
               </div>
             </div>
+
           </div>
+          <p class="statuses"><span class="on-task task-status">On Task</span><span class="off-task task-status active">Off Task</span></p>
         </div>
         <form method="post" data-theme="b">
           <div id="observationSessionControls">
@@ -195,7 +200,7 @@
     </div>
     <div id="intervalNotes" data-role="page">
       <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
-          <h1>Notes For Interval X</h1>
+          <h1>Notes</h1>
           <a class="button back" href="#recordSessionPanel">Back To Session</a>
       </div>
       <div class="ui-field-contain notes-form">
@@ -225,40 +230,28 @@
             <h1 id="reportTitle">Report</h1>
             <a class="button back" href="#viewSessionsPanel">Back</a>
         </div>
-        <div class="reportSection" id="observationMetaData">
-          <span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>
-          <span class="reportLabel">Date: </span><span class="reportValue" id="omdDate">&nbsp;</span>
-          <span class="reportLabel">Activity: </span><span class="reportValue" id="omdActivity">foo</span>
-        </div>
-        <div class="reportSection" id="emailReport">
-            <span class="reportLabel">Email: </span><span class="reportValue" id="omdSendReport">
-            <input id="sendReportButton" onclick="sendReport()" type="button" name="pause" value="Send Report" />
-            <!-- a id="sendReportLink" href="#" onclick="sendReport()" >Send this report</a--></span>
-        </div>
-        <div class="reportSection" id="summaryTable">
-          <div id="reportDataContainer">
-            <p>								<span class="reportRowHeader"	 id="empty"></span>						<span class="reportColumnHeader subjectData" id="reportHeaderSubject">Subject</span>	<span class="reportColumnHeader peerData"	id="reportHeaderPeer">Peer</span>	</p>
-            <p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOnTask">On-Task</span>	<span class="reportColumnData subjectData" id="reportDataOnTaskSubject"></span>			<span class="reportColumnData peerData"		id="reportDataOnTaskPeer"></span>	</p>
-            <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelAET">AET</span>			<span class="reportColumnSubData subjectData" id="reportDataAETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataAETPeer"></span>		</p>
-            <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelPET">PET</span>			<span class="reportColumnSubData subjectData" id="reportDataPETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataPETPeer"></span>		</p>
-            <p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOffTask">Off-Task</span><span class="reportColumnData subjectData" id="reportDataOffTaskSubject"></span>		<span class="reportColumnData peerData"		id="reportDataOffTaskPeer"></span>	</p>
-            <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTM">OTM</span>			<span class="reportColumnSubData subjectData" id="reportDataOTMSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTMPeer"></span>		</p>
-            <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTV">OTV</span>			<span class="reportColumnSubData subjectData" id="reportDataOTVSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTVPeer"></span>		</p>
-            <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTP">OTP</span>			<span class="reportColumnSubData subjectData" id="reportDataOTPSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTPPeer"></span>		</p>
+        <div class="resultspanel">
+          <div class="reportSection" id="observationMetaData">
+            <span class="reportLabel">Location: </span><span class="reportValue" id="omdLoc">&nbsp;</span>
+            <span class="reportLabel">Date: </span><span class="reportValue" id="omdDate">&nbsp;</span>
+            <span class="reportLabel">Activity: </span><span class="reportValue" id="omdActivity">foo</span>
           </div>
-        </div>
-        <div class="reportSection">
-          <div class="chartContainer" style="color:white; text-align:center;">
-            <span class="chartTitle">On-Task / Off-Task</span>
-            <canvas id="can" height="200" width="280" style="border:'red 1px solid'"></canvas>
+          <div class="reportSection" id="emailReport">
+              <span class="reportLabel">Email: </span><span class="reportValue" id="omdSendReport">
+              <input id="sendReportButton" onclick="sendReport()" type="button" name="pause" value="Send Report" />
+              <!-- a id="sendReportLink" href="#" onclick="sendReport()" >Send this report</a--></span>
           </div>
-          <div class="chartContainer" style="color:white; text-align:center;">
-            <span class="chartTitle">AET / PET</span>
-            <canvas id="onTaskCanvas" height="200" width="280"></canvas>
-          </div>
-          <div class="chartContainer" style="color:white; text-align:center;">
-            <span class="chartTitle">OTM / OTV / OTP</span>
-            <canvas id="offTaskCanvas" height="200" width="280"></canvas>
+          <div class="reportSection" id="summaryTable">
+            <div id="reportDataContainer">
+              <p>								<span class="reportRowHeader"	 id="empty"></span>						<span class="reportColumnHeader subjectData" id="reportHeaderSubject">Subject</span>	<span class="reportColumnHeader peerData"	id="reportHeaderPeer">Peer</span>	</p>
+              <p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOnTask">On-Task</span>	<span class="reportColumnData subjectData" id="reportDataOnTaskSubject"></span>			<span class="reportColumnData peerData"		id="reportDataOnTaskPeer"></span>	</p>
+              <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelAET">AET</span>			<span class="reportColumnSubData subjectData" id="reportDataAETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataAETPeer"></span>		</p>
+              <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelPET">PET</span>			<span class="reportColumnSubData subjectData" id="reportDataPETSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataPETPeer"></span>		</p>
+              <p class="reportRowHeading">	<span class="reportRowHeader"	 id="reportLabelOffTask">Off-Task</span><span class="reportColumnData subjectData" id="reportDataOffTaskSubject"></span>		<span class="reportColumnData peerData"		id="reportDataOffTaskPeer"></span>	</p>
+              <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTM">OTM</span>			<span class="reportColumnSubData subjectData" id="reportDataOTMSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTMPeer"></span>		</p>
+              <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTV">OTV</span>			<span class="reportColumnSubData subjectData" id="reportDataOTVSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTVPeer"></span>		</p>
+              <p class="reportRowSubHeading">	<span class="reportRowSubHeader" id="reportLabelOTP">OTP</span>			<span class="reportColumnSubData subjectData" id="reportDataOTPSubject"></span>			<span class="reportColumnSubData peerData"	id="reportDataOTPPeer"></span>		</p>
+            </div>
           </div>
         </div>
         <div class="reportSection" id = "rawDataDump">
@@ -266,15 +259,31 @@
       </div>
 <!--
           <div class="reportSection">
-      <h1 class="reportHeader">Raw Data</h1>
-              <ul class="edgetoedge">
-                  <li id="intervalDataItems" class="entry" style="display:none">
-                      <span class="peer"></span>
-                      <span class="intervalNumber">Label</span>
-                      <span class="onTask"></span>
-                      <span class="offTasks"></span>
-                  </li>
-              </ul>
+            <div class="chartContainer" style="color:white; text-align:center;">
+              <span class="chartTitle">On-Task / Off-Task</span>
+              <canvas id="can" height="200" width="280" style="border:'red 1px solid'"></canvas>
+            </div>
+            <div class="chartContainer" style="color:white; text-align:center;">
+              <span class="chartTitle">AET / PET</span>
+              <canvas id="onTaskCanvas" height="200" width="280"></canvas>
+            </div>
+            <div class="chartContainer" style="color:white; text-align:center;">
+              <span class="chartTitle">OTM / OTV / OTP</span>
+              <canvas id="offTaskCanvas" height="200" width="280"></canvas>
+            </div>
+          <!--
+            <div class="reportSection">
+          <h1 class="reportHeader">Raw Data</h1>
+                <ul class="edgetoedge">
+                    <li id="intervalDataItems" class="entry" style="display:none">
+                        <span class="peer"></span>
+                        <span class="intervalNumber">Label</span>
+                        <span class="onTask"></span>
+                        <span class="offTasks"></span>
+                    </li>
+                </ul>
+            </div>
+          -->
           </div>
 -->
     <div id="manageStudents" class="blink" data-role="page">
@@ -316,24 +325,14 @@
             <h1>About</h1>
             <a class="button back" href="#home">Back</a>
         </div>
-        <div>
-            We greatly apologize for the delay in fixing the SOTO app.  We have restored our development environment and workflow, enabling us to deliver more regular updates and new features.  Thank you.
-        </div>
 
-        <div>
+        <div class="about">
             <p>The SOTO (<i>Student On-Task Observation</i>) App helps you gather, analyze and document &quot;on-task / off-task&quot; observation data of your students.</p>
-    <p>Our goal is to provide a simple, intuitive app that makes behavioral observation fast and easy for everyone.  We hope this app helps save you time and effort with accurate data collection and reporting.</p>
-    <ul>
-      <li>Have questions about this app?</li>
-      <li>Want to see other features here?</li>
-      <li>Got other app ideas for schools? </li>
-    </ul>
-    <p>Email us at <a style="color: #0080ff" href="mailto:support@monkeylikesit.com?subject=SOTO Support Email: " target="_blank">support@monkeylikesit.com</a>! </p>
-    <p>Also visit our website at <b>http://monkeylikesit.com</b> for more information and additional resources.</p>
-    <!-- <a href="https://www.linkedin.com/in/ed-shapiro-22758111"> -->
-    <p><b>Special credit and acknowledgement</b> goes to <u><b>Dr. Edward S. Shapiro, Ph.D.</b></u></a> for his book <u>Academic Skills Problems - Direct Assessment and Intervention</u>, and the definitions of his interval codings for the Behavioral Observation of Students.
-</p><p>SOTO v.1.2.62</p>
-
+            <p>Our goal is to provide a simple, intuitive app that makes behavioral observation fast and easy for everyone.  We hope this app helps save you time and effort with accurate data collection and reporting.</p>
+            <!-- <a href="https://www.linkedin.com/in/ed-shapiro-22758111"> -->
+            <p><b>Special credit and acknowledgement</b> goes to <u><b>Dr. Edward S. Shapiro, Ph.D.</b></u></a> for his book <u>Academic Skills Problems - Direct Assessment and Intervention</u>, and the definitions of his interval codings for the Behavioral Observation of Students.</p>
+            <p class="version">Current Version: <strong>1.3.0</strong></p>
+            <p>Email us at <a style="color: #0080ff" href="mailto:support@trycatchthrow.co?subject=SOTO Support Email: " target="_blank">support@trycatchthrow.co</a></p>
         </div>
     </div>
     <div id="helpPanel" data-role="page">
@@ -341,7 +340,7 @@
             <h1>Help</h1>
             <a class="button back" href="#home">Back</a>
         </div>
-        <div>
+        <div class="help">
             <h2>Settings</h2>
             <p>From the home page, click on the "Settings" button in the top right corner of the screen.</p>
             <p><b>Interval Length</b> - This setting represents how long each observation interval will last (in seconds).  The default recommended length is 15 seconds.</p>

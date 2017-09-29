@@ -3,7 +3,7 @@
   max-width: 80%;
   margin: 0 auto;
 }
-.getstarted {
+.getstarted, .statuses {
   font-size: 12px;
   font-style: italic;
   text-align: center;
@@ -14,6 +14,7 @@
 }
 .intervalNumberLabel h4, .secondsLabel h4 {
   margin: 0;
+  font-size: 14px;
 }
 .digits {
   font-size: 40px;
@@ -56,11 +57,35 @@
   text-align: center;
   font-size: 12px;
 }
-.settings-form, .notes-form, .modify-student {
+.settings-form, .notes-form, .modify-student, .help, .about, .resultspanel {
   margin: 0 auto;
   padding: 20px;
   width: 80%;
 }
 .ui-field-contain {
   border: none;
+}
+.recordText {
+  padding-top: 15px;
+}
+.statuses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+.task-status {
+  display: inline-block;
+  padding: 5px;
+  margin: 0 3px;
+  color: #f2f2f2;
+}
+.on-task.active {
+  color: #0c670c;
+}
+.off-task.active {
+  color: red;
+}
+#onTask {
+  display: flex;
 }

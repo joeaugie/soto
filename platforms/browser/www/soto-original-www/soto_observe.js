@@ -149,6 +149,7 @@ function beginRecordingSession() {
     timer_is_on = 1;
     enableAllOnTaskFields();
 	  document.getElementById('cancelRecordSession').style.display = "none";
+		$(".getstarted").hide();
     timedCount();
   }
 }
@@ -175,13 +176,13 @@ function timedCount() {
 			if (--timer < 0) {
 				// Start the next interval
 		      saveIntervalData(intervalTarget);
-					intervalHeading = "<h4>Interval Number</h4>";
+					intervalHeading = "<h4><strong style='color:red;'>Student</strong> Interval Number</h4>";
 					interval++;
 					flashIntervalHeaderOff();
 					if (interval == peerInterval) {
 						intervalTarget = "Peer";
 						peerInterval = peerInterval + PEER_INTERVAL_FACTOR;
-						intervalHeading = "<h4><strong style='color:red;'>Peer</strong> Interval Number</h4>";
+						intervalHeading = "<h4><strong style='color:blue;'>Peer</strong> Interval Number</h4>";
 					}
 					else {
 						intervalTarget = "Subject";
@@ -225,11 +226,25 @@ function flashIntervalHeaderOff() {
     document.getElementById('intervalHeaderSecondsLeft').style.color = "black";
     //fT = setTimeout(flashIntervalHeaderOn, 169);
 }
+function checkOnTask() {
+	$(".on-task, .off-task").removeClass("active");
+	if(document.getElementById("AET").checked == true || document.getElementById("PET").checked == true){
+		$(".on-task").addClass("active");
+	} else {
+		$(".off-task").addClass("active");
+	}
+}
 function toggleAET() {
-    if (document.getElementById("AET").checked == true) document.getElementById("PET").checked = false;
+    if (document.getElementById("AET").checked == true) {
+			document.getElementById("PET").checked = false;
+		}
+		checkOnTask();
 }
 function togglePET() {
-    if (document.getElementById("PET").checked == true) document.getElementById("AET").checked = false;
+    if (document.getElementById("PET").checked == true) {
+			document.getElementById("AET").checked = false;
+		}
+		checkOnTask();
 }
 function clickAET() {
     if (document.getElementById("AET").checked == true) document.getElementById("AET").checked = false;
@@ -266,6 +281,7 @@ function endRecordingSession() {
 		//clearTimeout(fT);
 	  timer_is_on = 0;
 		document.getElementById('cancelRecordSession').style.display = "inline";
+		$(".getstarted").show();
 		// Persist all interval data
 		db.transaction(function(tx){
 			var sqlMassInsert="";
@@ -320,6 +336,7 @@ function resetAllRecordingSessionFields() {
     document.getElementById("OTM").checked = false;
     document.getElementById("OTV").checked = false;
     document.getElementById("OTP").checked = false;
+		checkOnTask();
 }
 function resetGlobalVariables(){
 	// Global variables used for all recording session logic.
@@ -330,7 +347,7 @@ function resetGlobalVariables(){
 	interval = 1;
 	intervalTarget = "Subject";
 	peerInterval = PEER_INTERVAL_FACTOR;
-	intervalHeading = "<h4>Interval Number</h4>";
+	intervalHeading = "<h4><strong style='color:red;'>Student</strong> Interval Number</h4>";
 }
 
 function errorHandler(transaction, error) {

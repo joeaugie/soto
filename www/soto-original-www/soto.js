@@ -33,6 +33,7 @@ var staticHREF;
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
+
   $(document).on("pagebeforeshow","#settings",loadSettings);
   $(document).on("pagebeforeshow","#viewSessionsPanel", getStudentObservations);
   $(document).on("pagebeforeshow","#manageStudents", getStudents);
@@ -41,9 +42,6 @@ $(document).ready(function () {
   $('#settings form').submit(saveSettings);
   $('#newSessionPanel form').submit(saveNewSession);
   $('#recordSessionPanel form').submit(beginRecordingSession);
-
-
-
 
 //	if (typeOf(PhoneGap) != 'undefined') {
 //				  $('body > *').css({minHeight: '460px !important'});
