@@ -308,7 +308,7 @@ function deleteEntryById(id) {
 				   );
 }
 function getObservationResults(_obsv){
-	console.log("entered getObservationResults( " + _obsv.StudentId + " )");
+	console.log("entered getObservationResults( " + _obsv.Student.StudentId + " )");
   // jQT.goTo('#observationResultsPanel', 'slide');
 	$.mobile.navigate( "#observationResultsPanel" );
   // $('#observationResultsPanel ul li:gt(0)').remove();  	// This line doesn't make any sense.
