@@ -338,7 +338,7 @@ if (description.length == 0) description = "&nbsp;";
 	  for (var i = 0; i < result.rows.length; i++) {
 	      var row = result.rows.item(i);
 				rawDataDump = rawDataDump + "<tr><td>" + row.IntervalNumber + "</td><td>" + row.Target + "</td><td>" + row.OnTask +
-																	  "</td><td>" + row.OffTask_1 + "</td><td>" + row.OffTask_2 + "</td><td>" + row.OffTask_3 + "</td></tr>";
+																	  "</td><td>" + row.OffTask_1 + "</td><td>" + row.OffTask_2 + "</td><td>" + row.OffTask_3 + "</td><td>" + row.IntervalNotes + "</td></tr>";
 
 	      if (row.Target == "Subject") {
 	          // Track counts for Summary Data Report
