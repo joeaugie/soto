@@ -329,9 +329,15 @@ if (description.length == 0) description = "&nbsp;";
 	  var peerOTM = 0;
 	  var peerOTV = 0;
 	  var peerOTP = 0;
+		var rawDataDump = "<table> \
+												<tr><th>Interval Number</th><th>Target</th><th>On/Off Task</th><th>" + _obsv.OtCode1 + "</th><th>" + _obsv.OtCode2 + "</th><th>" + _obsv.OtCode3 + "</th></tr>";
+
 
 	  for (var i = 0; i < result.rows.length; i++) {
 	      var row = result.rows.item(i);
+				rawDataDump = rawDataDump + "<tr><td>" + row.IntervalNumber + "</td><td>" + row.Target + "</td><td>" + row.OnTask +
+																	  "</td><td>" + row.OffTask_1 + "</td><td>" + row.OffTask_2 + "</td><td>" + row.OffTask_3 + "</td></tr>";
+
 	      if (row.Target == "Subject") {
 	          // Track counts for Summary Data Report
 	          subjectIntervals++;
@@ -393,6 +399,7 @@ if (description.length == 0) description = "&nbsp;";
 
 	  } //end FOR Loop
 
+		rawDataDump = rawDataDump + "</table>"
 
 	  // Summarize Observation Data
 	  // Overall On Task %,  AET %,  PET %,  OFF TASK %
@@ -480,6 +487,7 @@ if (description.length == 0) description = "&nbsp;";
 	document.getElementById("reportDataOTMPeer").innerHTML = otmPercentPeer  + "%";
 	document.getElementById("reportDataOTVPeer").innerHTML = otvPercentPeer  + "%";
 	document.getElementById("reportDataOTPPeer").innerHTML = otpPercentPeer  + "%";
+	document.getElementById("rawDataDump").innerHTML = rawDataDump;
 
 	/*				                    var peerObservationSummary = "<br/><hr/><br/><b><u>PEER SUMMARY</u></b><br/><br/>Percent ON-TASK: " + onTaskPercentPeer + "%<br/>" +
 			"      ----- AET: <b>" + aetPercentPeer + "%</b><br/>" +
@@ -542,6 +550,8 @@ if (description.length == 0) description = "&nbsp;";
 	 "-------------------------------------\n" +
 	 peerObservationSummary +
 	 "-------------------------------------\n" +
+	 rawDataDump +
+	 "-------------------------------------\n" +
 	/*												   "OBSERVATION DETAILS\n\n" +
 	 subjectIntervals + " \t Subject: # of Intervals Total\n " +
 	 subjectOnTask +    " \t Subject: # of Intervals On-Task\n " +
@@ -566,6 +576,8 @@ if (description.length == 0) description = "&nbsp;";
 
 	 //document.getElementById("sendReportLink").href= staticHREF + emailSubject + emailMessage;
 	 //document.getElementById("sendReportLink").onclick = "javascript:showEmailComposer(" + emailSubject + "," + emailMessage + "," + "jjcalo@yahoo.com" + ", nil, nil, YES);";
+
+
 
 	});
 
