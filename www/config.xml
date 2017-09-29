@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.monkeyapps.soto" version="1.2.62" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.monkeyapps.soto" version="1.3.01" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
 
     <!-- Version 1.2.58 - Addressing Email Composer 0.8.3 not working for some Android versions.  Specifying GIT 0.8.2 for Android platform.   And NPM 0.8.3 for iOS -->
     <!--                - Also removed unnecessary plugins.   -->

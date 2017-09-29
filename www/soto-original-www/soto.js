@@ -260,7 +260,7 @@ function displayObservations(result) {
 		newEntryRow.appendTo('#viewSessionsPanel ul');
 		newEntryRow.find('#subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
-		newEntryRow.find('#observationDate').text(moment(observation.DateObservation).format('MM-dd-YY'));
+		newEntryRow.find('#observationDate').text(moment(observation.DateObservation).format('ddd MM-DD-YYYY'));
 //		newEntryRow.find('#subjectName').click(function () {
 		newEntryRow.click(function () {
 			var clickedEntry = $(this).parent();
