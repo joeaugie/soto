@@ -91,9 +91,9 @@ function insert_NewObservation (tx, _observation, after_InsertNewObservation) {
 
 function insert_NewInterval (tx, _interval, after_InsertNewInterval) {
     tx.executeSql('INSERT INTO Interval (ObservationId, IntervalNumber, Target, \
-      OnTask, OffTask_1, OffTask_2, OffTask_3) VALUES (?,?,?,?,?,?,?)',
+      OnTask, OffTask_1, OffTask_2, OffTask_3, IntervalNotes) VALUES (?,?,?,?,?,?,?,?)',
       [_interval.ObservationId, _interval.IntervalNumber, _interval.Target, _interval.OnTask,
-        _interval.OffTask_1, _interval.OffTask_2, _interval.OffTask_3], function(tx, rs) {
+        _interval.OffTask_1, _interval.OffTask_2, _interval.OffTask_3, _interval.IntervalNotes], function(tx, rs) {
         console.log("callback [insert into Interval] insertId: " + rs.insertId);
         _interval.IntervalId = rs.insertId;
         return after_InsertNewInterval(tx, _interval);

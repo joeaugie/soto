@@ -160,7 +160,7 @@ function pauseRecordingSession() {
 }
 
 function captureNotes() {
-	$.mobile.navigate("#intervalNotes");	
+	$.mobile.navigate("#intervalNotes");
 }
 
 function timedCount() {
@@ -304,6 +304,7 @@ function endRecordingSession() {
 				newInterval.OffTask_1 = arOTM[i];
 				newInterval.OffTask_2 = arOTV[i];
 				newInterval.OffTask_3 = arOTP[i];
+				newInterval.IntervalNotes = arNotes[i];
 
 				/*
 				sqlMassInsert = "INSERT INTO Interval (ObservationId, IntervalNumber, target, onTask, OTM, OTV, OTP) VALUES (?, ?, ?, ?, ?, ?, ?);";
