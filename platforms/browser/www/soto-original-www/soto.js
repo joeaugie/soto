@@ -289,7 +289,7 @@ function displayObservations(result) {
 			var clickedEntryId = clickedEntry.data('entryId');
 			//var clickedEntityObject = clickedEntry.data('entityObject');
 			if (confirm("Are you sure you want to DELETE this observation?") == true){
-											deleteEntryById(clickedEntryId);
+											deleteEntryById(clickedEntityObject);
 											clickedEntry.slideUp();
 			}
 		});
@@ -298,13 +298,10 @@ function displayObservations(result) {
 	//return true;
 }
 
-function deleteEntryById(id) {
-    db.transaction(
-				   function (transaction) {
-				   transaction.executeSql('DELETE FROM studentObservations WHERE id=?;', [id], null, errorHandler);
-				   transaction.executeSql('DELETE FROM intervalData WHERE soid=?;', [id], null, errorHandler);
-				   }
-				   );
+function deleteEntryById(_observation) {
+	console.group("entering deleteEntryById( " + _observation +  " )");
+	delete_Observation(_observation.ObservationId);
+	console.groupEnd();
 }
 function getObservationResults(_obsv){
 	console.log("entered getObservationResults( " + _obsv.Student.StudentId + " )");
