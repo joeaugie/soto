@@ -256,28 +256,39 @@ function displayObservations(result) {
 		var newEntryRow = $('#savedSessionItem').clone();
 		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', observation.ObservationId);
+		newEntryRow.data('entityObject', observation);
 		newEntryRow.appendTo('#viewSessionsPanel ul');
 		newEntryRow.find('#subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
 		newEntryRow.find('#observationDate').text(observation.DateObservation);
-		newEntryRow.find('#subjectName').click(function () {
+//		newEntryRow.find('#subjectName').click(function () {
+		newEntryRow.click(function () {
 			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			getObservationResults(clickedEntryId);
+			var clickedEntryId = ($(this).data('entryId'));
+			// var clickedEntityObject = clickedEntry.data('entityObject');
+			var clickedEntityObject = $(this).data('entityObject');
+			console.log("  clickedEntryId: " + clickedEntryId);
+			console.log("  clickedEntityObject: " + clickedEntityObject.Student.getFullName());
+			getObservationResults(clickedEntityObject);
 		});
-		newEntryRow.find('#classLocation').click(function () {
+
+/*		newEntryRow.find('#classLocation').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
-			getObservationResults(clickedEntryId);
+			var clickedEntityObject = clickedEntry.data('entityObject');
+			getObservationResults(clickedEntityObject);
 		});
 		newEntryRow.find('#observationDate').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
-			getObservationResults(clickedEntryId);
+			var clickedEntityObject = clickedEntry.data('entityObject');
+			getObservationResults(clickedEntityObject);
 		});
+*/
 		newEntryRow.find('.delete').click(function () {
 			var clickedEntry = $(this).parent();
 			var clickedEntryId = clickedEntry.data('entryId');
+			//var clickedEntityObject = clickedEntry.data('entityObject');
 			if (confirm("Are you sure you want to DELETE this observation?") == true){
 											deleteEntryById(clickedEntryId);
 											clickedEntry.slideUp();
@@ -296,299 +307,284 @@ function deleteEntryById(id) {
 				   }
 				   );
 }
-function getObservationResults(_selectedSOID){
-    // jQT.goTo('#observationResultsPanel', 'slide');
-		$.mobile.navigate( "#observationResultsPanel" );
-    $('#observationResultsPanel ul li:gt(0)').remove();
-    db.transaction(
-        function (transaction) {
-            transaction.executeSql(
-                'SELECT * FROM studentObservations WHERE id=?;', [_selectedSOID],
-                function (transaction, result) {
-                    var name = result.rows.item(0).subjectName;
-                    var location = result.rows.item(0).classLocation;
-                    var date = new Date(Date.parse(result.rows.item(0).observationDate));
-                    var minutes = date.getUTCMinutes().toString();
-                    if (minutes.length == 1) minutes = "0" + minutes;
-                    var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + date.getHours() + ":" + minutes;
-                    var description = result.rows.item(0).activityDescription;
-					if (description.length == 0) description = "&nbsp;";
-                    document.getElementById('reportTitle').innerHTML = name;
-                    document.getElementById('omdLoc').innerHTML = location;
-                    document.getElementById('omdDate').innerHTML = shortDate;
-                    document.getElementById('omdActivity').innerHTML = description;
+function getObservationResults(_obsv){
+	console.log("entered getObservationResults( " + _obsv.Student.StudentId + " )");
+  // jQT.goTo('#observationResultsPanel', 'slide');
+	$.mobile.navigate( "#observationResultsPanel" );
+  // $('#observationResultsPanel ul li:gt(0)').remove();  	// This line doesn't make any sense.
 
-                    db.transaction(
-				        function (transaction) {
-				            transaction.executeSql(
-				                'SELECT * FROM intervalData WHERE soid = ?;', [_selectedSOID],
-				                function (transaction, result) {
-				                    var subjectIntervals = 0;
-				                    var subjectOnTask = 0;
-				                    var subjectOffTask = 0;
-				                    var subjectAET = 0;
-				                    var subjectPET = 0;
-				                    var subjectOTM = 0;
-				                    var subjectOTV = 0;
-				                    var subjectOTP = 0;
-				                    var totalPeerIntervals = 0;
-				                    var peerOnTask = 0;
-				                    var peerOffTask = 0;
-				                    var peerAET = 0;
-				                    var peerPET = 0;
-				                    var peerOTM = 0;
-				                    var peerOTV = 0;
-				                    var peerOTP = 0;
+	var name = _obsv.Student.getFullName();
+	var location = _obsv.Location;
+	var date = new Date(Date.parse(_obsv.DateObservation));
+	var minutes = date.getUTCMinutes().toString();
+	if (minutes.length == 1) minutes = "0" + minutes;
+	var shortDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + date.getHours() + ":" + minutes;
+	var description = _obsv.ActivityDescription;
+if (description.length == 0) description = "&nbsp;";
+	document.getElementById('reportTitle').innerHTML = name;
+	document.getElementById('omdLoc').innerHTML = location;
+	document.getElementById('omdDate').innerHTML = shortDate;
+	document.getElementById('omdActivity').innerHTML = description;
 
-				                    for (var i = 0; i < result.rows.length; i++) {
-				                        var row = result.rows.item(i);
+	qryIntervals(_obsv.ObservationId, function (result) {
+		var observation = _obsv;
+	  var subjectIntervals = 0;
+	  var subjectOnTask = 0;
+	  var subjectOffTask = 0;
+	  var subjectAET = 0;
+	  var subjectPET = 0;
+	  var subjectOTM = 0;
+	  var subjectOTV = 0;
+	  var subjectOTP = 0;
+	  var totalPeerIntervals = 0;
+	  var peerOnTask = 0;
+	  var peerOffTask = 0;
+	  var peerAET = 0;
+	  var peerPET = 0;
+	  var peerOTM = 0;
+	  var peerOTV = 0;
+	  var peerOTP = 0;
 
+	  for (var i = 0; i < result.rows.length; i++) {
+	      var row = result.rows.item(i);
+	      if (row.Target == "Subject") {
+	          // Track counts for Summary Data Report
+	          subjectIntervals++;
+	          if (row.OnTask == "AET") {
+	              subjectOnTask++;
+	              subjectAET++;
+	          }
+	          if (row.OnTask == "PET") {
+	              subjectOnTask++;
+	              subjectPET++;
+	          }
+	          if (row.OnTask == "OFFT") {
+	              subjectOffTask++;
+	          }
+	          if (row.OffTask_1 == "true") subjectOTM++;
+	          if (row.OffTask_2 == "true") subjectOTP++;
+	          if (row.OffTask_3 == "true") subjectOTV++;
+	      }
+	      else //Add data for the PEER intervals.
+	      {
+	          // Track counts for Summary Data Report
+	          totalPeerIntervals++;
+	          if (row.OnTask == "AET") {
+	              peerOnTask++;
+	              peerAET++;
+	          }
+	          if (row.OnTask == "PET") {
+	              peerOnTask++;
+	              peerPET++;
+	          }
+	          if (row.OnTask == "OFFT") {
+	              peerOffTask++;
+	          }
+	          if (row.OffTask_1 == "true") peerOTM++;
+	          if (row.OffTask_2 == "true") peerOTP++;
+	          if (row.OffTask_3 == "true") peerOTV++;
+	      }
 
-				                        if (row.target == "Subject") {
-				                            // Track counts for Summary Data Report
-				                            subjectIntervals++;
-				                            if (row.onTask == "AET") {
-				                                subjectOnTask++;
-				                                subjectAET++;
-				                            }
-				                            if (row.onTask == "PET") {
-				                                subjectOnTask++;
-				                                subjectPET++;
-				                            }
-				                            if (row.onTask == "OFFT") {
-				                                subjectOffTask++;
-				                            }
-				                            if (row.OTM == "true") subjectOTM++;
-				                            if (row.OTP == "true") subjectOTP++;
-				                            if (row.OTV == "true") subjectOTV++;
-				                        }
-				                        else //Add data for the PEER intervals.
-				                        {
-				                            // Track counts for Summary Data Report
-				                            totalPeerIntervals++;
-				                            if (row.onTask == "AET") {
-				                                peerOnTask++;
-				                                peerAET++;
-				                            }
-				                            if (row.onTask == "PET") {
-				                                peerOnTask++;
-				                                peerPET++;
-				                            }
-				                            if (row.onTask == "OFFT") {
-				                                peerOffTask++;
-				                            }
-				                            if (row.OTM == "true") peerOTM++;
-				                            if (row.OTP == "true") peerOTP++;
-				                            if (row.OTV == "true") peerOTV++;
-				                        }
+	/*
+	*	Removed RAW DATA section for now.
+	*				                        // Display detailed interval data as recorded.
+	      var newEntryRow = $('#intervalDataItems').clone();
+	      newEntryRow.removeAttr('style');
+	      newEntryRow.attr('id', row.id);
+	      newEntryRow.appendTo('#observationResultsPanel ul');
+	      newEntryRow.find('.intervalNumber').text("Interval #: " + row.interval);
+	      newEntryRow.find('.onTask').text(row.onTask);
 
-/*
- *	Removed RAW DATA section for now.
- *				                        // Display detailed interval data as recorded.
-				                        var newEntryRow = $('#intervalDataItems').clone();
-				                        newEntryRow.removeAttr('style');
-				                        newEntryRow.attr('id', row.id);
-				                        newEntryRow.appendTo('#observationResultsPanel ul');
-				                        newEntryRow.find('.intervalNumber').text("Interval #: " + row.interval);
-				                        newEntryRow.find('.onTask').text(row.onTask);
+	      var offTasks = "";
+	      if (row.OTM == "true") offTasks = offTasks + "OTM ";
+	      if (row.OTV == "true") offTasks = offTasks + "OTV ";
+	      if (row.OTP == "true") offTasks = offTasks + "OTP";
+	      newEntryRow.find('.offTasks').text(offTasks);
 
-				                        var offTasks = "";
-				                        if (row.OTM == "true") offTasks = offTasks + "OTM ";
-				                        if (row.OTV == "true") offTasks = offTasks + "OTV ";
-				                        if (row.OTP == "true") offTasks = offTasks + "OTP";
-				                        newEntryRow.find('.offTasks').text(offTasks);
-
-				                        if (row.target == "Peer")
-				                            newEntryRow.find('.peer').text("PEER INTERVAL: ");
-*/
+	      if (row.target == "Peer")
+	          newEntryRow.find('.peer').text("PEER INTERVAL: ");
+	*/
 
 
-				                    } //end FOR Loop
+	  } //end FOR Loop
 
 
-				                    // Summarize Observation Data
-				                    // Overall On Task %,  AET %,  PET %,  OFF TASK %
-				                    // OTM%, OTV%,  OTP%
+	  // Summarize Observation Data
+	  // Overall On Task %,  AET %,  PET %,  OFF TASK %
+	  // OTM%, OTV%,  OTP%
 
-				                    var onTaskPercentSubject = ((subjectOnTask / subjectIntervals) * 100).toFixed(2);
-				                    var aetPercentSubject;
-				                    var petPercentSubject;
-				                    if (subjectOnTask == 0) {
-				                        aetPercentSubject = 0;
-				                        petPercentSubject = 0;
-				                    } else {
-				                        aetPercentSubject = ((subjectAET / subjectIntervals) * 100).toFixed(1);
-				                        petPercentSubject = ((subjectPET / subjectIntervals) * 100).toFixed(1);
-				                    }
-				                    var offTaskPercentSubject = ((subjectOffTask / subjectIntervals) * 100).toFixed(2);
-				                    var otmPercentSubject = ((subjectOTM / subjectIntervals) * 100).toFixed(1);
-				                    var otvPercentSubject = ((subjectOTV / subjectIntervals) * 100).toFixed(1);
-				                    var otpPercentSubject = ((subjectOTP / subjectIntervals) * 100).toFixed(1);
+	  var onTaskPercentSubject = ((subjectOnTask / subjectIntervals) * 100).toFixed(2);
+	  var aetPercentSubject;
+	  var petPercentSubject;
+	  if (subjectOnTask == 0) {
+	      aetPercentSubject = 0;
+	      petPercentSubject = 0;
+	  } else {
+	      aetPercentSubject = ((subjectAET / subjectIntervals) * 100).toFixed(1);
+	      petPercentSubject = ((subjectPET / subjectIntervals) * 100).toFixed(1);
+	  }
+	  var offTaskPercentSubject = ((subjectOffTask / subjectIntervals) * 100).toFixed(2);
+	  var otmPercentSubject = ((subjectOTM / subjectIntervals) * 100).toFixed(1);
+	  var otvPercentSubject = ((subjectOTV / subjectIntervals) * 100).toFixed(1);
+	  var otpPercentSubject = ((subjectOTP / subjectIntervals) * 100).toFixed(1);
 
-									document.getElementById("reportDataOnTaskSubject").innerHTML = onTaskPercentSubject  + "%";
-									document.getElementById("reportDataAETSubject").innerHTML = aetPercentSubject  + "%";
-									document.getElementById("reportDataPETSubject").innerHTML = petPercentSubject  + "%";
-									document.getElementById("reportDataOffTaskSubject").innerHTML = offTaskPercentSubject  + "%";
-									document.getElementById("reportDataOTMSubject").innerHTML = otmPercentSubject  + "%";
-									document.getElementById("reportDataOTVSubject").innerHTML = otvPercentSubject  + "%";
-									document.getElementById("reportDataOTPSubject").innerHTML = otpPercentSubject  + "%";
+	document.getElementById("reportDataOnTaskSubject").innerHTML = onTaskPercentSubject  + "%";
+	document.getElementById("reportDataAETSubject").innerHTML = aetPercentSubject  + "%";
+	document.getElementById("reportDataPETSubject").innerHTML = petPercentSubject  + "%";
+	document.getElementById("reportDataOffTaskSubject").innerHTML = offTaskPercentSubject  + "%";
+	document.getElementById("reportDataOTMSubject").innerHTML = otmPercentSubject  + "%";
+	document.getElementById("reportDataOTVSubject").innerHTML = otvPercentSubject  + "%";
+	document.getElementById("reportDataOTPSubject").innerHTML = otpPercentSubject  + "%";
 
 
 
-/*				                    var subjectObservationSummary = "<br/><hr/><br/><b><u>SUBJECT SUMMARY</u></b><br/><br/>Percent ON-TASK: " + onTaskPercentSubject + "%<br/>" +
-															"      ----- AET: <b>" + aetPercentSubject + "%</b><br/>" +
-															"      ----- PET: <b>" + petPercentSubject + "%</b><br/>" +
-															"Percent OFF-TASK: <b>" + offTaskPercentSubject + "%</b><br/>" +
-															"Off Task MOTOR: <b>" + otmPercentSubject + "%</b><br/>" +
-															"Off Task VERBAL: <b>" + otvPercentSubject + "%</b><br/>" +
-															"Off Task PASSIVE: <b>" + otpPercentSubject + "%</b><br/>";
- */
+	/*				                    var subjectObservationSummary = "<br/><hr/><br/><b><u>SUBJECT SUMMARY</u></b><br/><br/>Percent ON-TASK: " + onTaskPercentSubject + "%<br/>" +
+			"      ----- AET: <b>" + aetPercentSubject + "%</b><br/>" +
+			"      ----- PET: <b>" + petPercentSubject + "%</b><br/>" +
+			"Percent OFF-TASK: <b>" + offTaskPercentSubject + "%</b><br/>" +
+			"Off Task MOTOR: <b>" + otmPercentSubject + "%</b><br/>" +
+			"Off Task VERBAL: <b>" + otvPercentSubject + "%</b><br/>" +
+			"Off Task PASSIVE: <b>" + otpPercentSubject + "%</b><br/>";
+	*/
 
-									var subjectObservationSummary =
-												   "SUBJECT SUMMARY\n\n" +
-												   "         ON-TASK: " + onTaskPercentSubject + "%\n" +
-												   "          -- AET: " + aetPercentSubject + "%\n" +
-												   "          -- PET: " + petPercentSubject + "%\n\n" +
-												   "        OFF-TASK: " + offTaskPercentSubject + "%\n" +
-												   "          -- OTM: " + otmPercentSubject + "%\n" +
-												   "          -- OTV: " + otvPercentSubject + "%\n" +
-												   "          -- OTP: " + otpPercentSubject + "%\n\n";
+	var subjectObservationSummary =
+	 "SUBJECT SUMMARY\n\n" +
+	 "         ON-TASK: " + onTaskPercentSubject + "%\n" +
+	 "          -- AET: " + aetPercentSubject + "%\n" +
+	 "          -- PET: " + petPercentSubject + "%\n\n" +
+	 "        OFF-TASK: " + offTaskPercentSubject + "%\n" +
+	 "          -- OTM: " + otmPercentSubject + "%\n" +
+	 "          -- OTV: " + otvPercentSubject + "%\n" +
+	 "          -- OTP: " + otpPercentSubject + "%\n\n";
 
-									var onTaskPercentPeer;
-				                    var aetPercentPeer;
-				                    var petPercentPeer;
-				                    var offTaskPercentPeer;
-				                    var otmPercentPeer;
-				                    var otvPercentPeer;
-				                    var otpPercentPeer;
+	var onTaskPercentPeer;
+	  var aetPercentPeer;
+	  var petPercentPeer;
+	  var offTaskPercentPeer;
+	  var otmPercentPeer;
+	  var otvPercentPeer;
+	  var otpPercentPeer;
 
-				                    if (totalPeerIntervals == 0) {
-				                        onTaskPercentPeer = 0;
-				                        aetPercentPeer = 0;
-				                        petPercentPeer = 0;
-				                        offTaskPercentPeer = 0;
-				                        otmPercentPeer = 0;
-				                        otvPercentPeer = 0;
-				                        otpPercentPeer = 0;
-				                    } else {
-				                        onTaskPercentPeer = ((peerOnTask / totalPeerIntervals) * 100).toFixed(2);
-				                        if (peerOnTask == 0) {
-				                            aetPercentPeer = 0;
-				                            petPercentPeer = 0;
-				                        } else {
-				                            aetPercentPeer = ((peerAET / totalPeerIntervals) * 100).toFixed(1);
-				                            petPercentPeer = ((peerPET / totalPeerIntervals) * 100).toFixed(1);
-				                        }
-				                        offTaskPercentPeer = ((peerOffTask / totalPeerIntervals) * 100).toFixed(2);
-				                        otmPercentPeer = ((peerOTM / totalPeerIntervals) * 100).toFixed(1);
-				                        otvPercentPeer = ((peerOTV / totalPeerIntervals) * 100).toFixed(1);
-				                        otpPercentPeer = ((peerOTP / totalPeerIntervals) * 100).toFixed(1);
-				                    }
+	  if (totalPeerIntervals == 0) {
+	      onTaskPercentPeer = 0;
+	      aetPercentPeer = 0;
+	      petPercentPeer = 0;
+	      offTaskPercentPeer = 0;
+	      otmPercentPeer = 0;
+	      otvPercentPeer = 0;
+	      otpPercentPeer = 0;
+	  } else {
+	      onTaskPercentPeer = ((peerOnTask / totalPeerIntervals) * 100).toFixed(2);
+	      if (peerOnTask == 0) {
+	          aetPercentPeer = 0;
+	          petPercentPeer = 0;
+	      } else {
+	          aetPercentPeer = ((peerAET / totalPeerIntervals) * 100).toFixed(1);
+	          petPercentPeer = ((peerPET / totalPeerIntervals) * 100).toFixed(1);
+	      }
+	      offTaskPercentPeer = ((peerOffTask / totalPeerIntervals) * 100).toFixed(2);
+	      otmPercentPeer = ((peerOTM / totalPeerIntervals) * 100).toFixed(1);
+	      otvPercentPeer = ((peerOTV / totalPeerIntervals) * 100).toFixed(1);
+	      otpPercentPeer = ((peerOTP / totalPeerIntervals) * 100).toFixed(1);
+	  }
 
-									document.getElementById("reportDataOnTaskPeer").innerHTML = onTaskPercentPeer + "%";
-									document.getElementById("reportDataAETPeer").innerHTML = aetPercentPeer  + "%";
-									document.getElementById("reportDataPETPeer").innerHTML = petPercentPeer  + "%";
-									document.getElementById("reportDataOffTaskPeer").innerHTML = offTaskPercentPeer  + "%";
-									document.getElementById("reportDataOTMPeer").innerHTML = otmPercentPeer  + "%";
-									document.getElementById("reportDataOTVPeer").innerHTML = otvPercentPeer  + "%";
-									document.getElementById("reportDataOTPPeer").innerHTML = otpPercentPeer  + "%";
+	document.getElementById("reportDataOnTaskPeer").innerHTML = onTaskPercentPeer + "%";
+	document.getElementById("reportDataAETPeer").innerHTML = aetPercentPeer  + "%";
+	document.getElementById("reportDataPETPeer").innerHTML = petPercentPeer  + "%";
+	document.getElementById("reportDataOffTaskPeer").innerHTML = offTaskPercentPeer  + "%";
+	document.getElementById("reportDataOTMPeer").innerHTML = otmPercentPeer  + "%";
+	document.getElementById("reportDataOTVPeer").innerHTML = otvPercentPeer  + "%";
+	document.getElementById("reportDataOTPPeer").innerHTML = otpPercentPeer  + "%";
 
-/*				                    var peerObservationSummary = "<br/><hr/><br/><b><u>PEER SUMMARY</u></b><br/><br/>Percent ON-TASK: " + onTaskPercentPeer + "%<br/>" +
-															"      ----- AET: <b>" + aetPercentPeer + "%</b><br/>" +
-															"      ----- PET: <b>" + petPercentPeer + "%</b><br/>" +
-															"Percent OFF-TASK: <b>" + offTaskPercentPeer + "%</b><br/>" +
-															"Off Task MOTOR: <b>" + otmPercentPeer + "%</b><br/>" +
-															"Off Task VERBAL: <b>" + otvPercentPeer + "%</b><br/>" +
-															"Off Task PASSIVE: <b>" + otpPercentPeer + "%</b><br/>";
-*/
-									var peerObservationSummary =
-												   "PEER SUMMARY\n\n" +
-												   "         ON-TASK: " + onTaskPercentPeer + "%\n" +
-												   "          -- AET: " + aetPercentPeer + "%\n" +
-												   "          -- PET: " + petPercentPeer + "%\n\n" +
-												   "        OFF-TASK: " + offTaskPercentPeer + "%\n" +
-												   "          -- OTM: " + otmPercentPeer + "%\n" +
-												   "          -- OTV: " + otvPercentPeer + "%\n" +
-												   "          -- OTP: " + otpPercentPeer + "%\n\n";
+	/*				                    var peerObservationSummary = "<br/><hr/><br/><b><u>PEER SUMMARY</u></b><br/><br/>Percent ON-TASK: " + onTaskPercentPeer + "%<br/>" +
+			"      ----- AET: <b>" + aetPercentPeer + "%</b><br/>" +
+			"      ----- PET: <b>" + petPercentPeer + "%</b><br/>" +
+			"Percent OFF-TASK: <b>" + offTaskPercentPeer + "%</b><br/>" +
+			"Off Task MOTOR: <b>" + otmPercentPeer + "%</b><br/>" +
+			"Off Task VERBAL: <b>" + otvPercentPeer + "%</b><br/>" +
+			"Off Task PASSIVE: <b>" + otpPercentPeer + "%</b><br/>";
+	*/
+	var peerObservationSummary =
+	 "PEER SUMMARY\n\n" +
+	 "         ON-TASK: " + onTaskPercentPeer + "%\n" +
+	 "          -- AET: " + aetPercentPeer + "%\n" +
+	 "          -- PET: " + petPercentPeer + "%\n\n" +
+	 "        OFF-TASK: " + offTaskPercentPeer + "%\n" +
+	 "          -- OTM: " + otmPercentPeer + "%\n" +
+	 "          -- OTV: " + otvPercentPeer + "%\n" +
+	 "          -- OTP: " + otpPercentPeer + "%\n\n";
 
 
 
-									//document.getElementById('observationSummary').innerHTML = subjectObservationSummary + peerObservationSummary;
+	//document.getElementById('observationSummary').innerHTML = subjectObservationSummary + peerObservationSummary;
 
-				                    // Draw On Task / Off Task Chart Comparison
-				                    var compOnOffTasksLabels = ["On-Task", "Off-Task"];
-				                    var compOnTaskData = [onTaskPercentSubject, onTaskPercentPeer];
-				                    var compOffTaskData = [offTaskPercentSubject, offTaskPercentPeer];
-				                    var compOnOffTasksDataPairs = [compOnTaskData, compOffTaskData];
-				                    initCanvas("can", compOnOffTasksLabels, compOnOffTasksDataPairs);
+	  // Draw On Task / Off Task Chart Comparison
+	  var compOnOffTasksLabels = ["On-Task", "Off-Task"];
+	  var compOnTaskData = [onTaskPercentSubject, onTaskPercentPeer];
+	  var compOffTaskData = [offTaskPercentSubject, offTaskPercentPeer];
+	  var compOnOffTasksDataPairs = [compOnTaskData, compOffTaskData];
+	  initCanvas("can", compOnOffTasksLabels, compOnOffTasksDataPairs);
 
-				                    // Draw OnTask AET PET Chart Comparison
-				                    var compAETPETLabels = ["AET", "PET"];
-				                    var compAETData = [aetPercentSubject, aetPercentPeer];
-				                    var compPETData = [petPercentSubject, petPercentPeer];
-				                    var compAETPETDataPairs = [compAETData, compPETData];
-				                    initCanvas("onTaskCanvas", compAETPETLabels, compAETPETDataPairs);
+	  // Draw OnTask AET PET Chart Comparison
+	  var compAETPETLabels = ["AET", "PET"];
+	  var compAETData = [aetPercentSubject, aetPercentPeer];
+	  var compPETData = [petPercentSubject, petPercentPeer];
+	  var compAETPETDataPairs = [compAETData, compPETData];
+	  initCanvas("onTaskCanvas", compAETPETLabels, compAETPETDataPairs);
 
-				                    //Draw Off Task Chart Comparison
-				                    var compOffTaskLabels = ["OTM", "OTV", "OTP"];
-				                    var compOTVData = [otvPercentSubject, otvPercentPeer];
-				                    var compOTMData = [otmPercentSubject, otmPercentPeer];
-				                    var compOTPData = [otpPercentSubject, otpPercentPeer];
-				                    var compOffTaskDataPairs = [compOTMData, compOTVData, compOTPData];
-				                    initCanvas("offTaskCanvas", compOffTaskLabels, compOffTaskDataPairs);
+	  //Draw Off Task Chart Comparison
+	  var compOffTaskLabels = [observation.OtCode1, observation.OtCode2, observation.OtCode3];
+	  var compOTVData = [otvPercentSubject, otvPercentPeer];
+	  var compOTMData = [otmPercentSubject, otmPercentPeer];
+	  var compOTPData = [otpPercentSubject, otpPercentPeer];
+	  var compOffTaskDataPairs = [compOTMData, compOTVData, compOTPData];
+	  initCanvas("offTaskCanvas", compOffTaskLabels, compOffTaskDataPairs);
 
-									staticHREF = "mailto:" + localStorage.userEmail + "?";
-									emailSubject = "SOTO Report: " + name;
-/*									emailMessage = "<h1>SOA Report for " + name + "</h1>Location: <b>" + location + "</b><br/>Date: <b>" + date + "</b><br/>"  +
-												   subjectObservationSummary + peerObservationSummary +
-												   "<hr/><br/><br/><b>On-Task / Off-Task</b>	<br/><img src='" + document.getElementById("can").toDataURL("image/png") + "'/><br/><i>Subject: red,   Peer: blue</i>" +
-												   "<hr/><br/><br/><b>AET / PET</b>				<br/><img src='" + document.getElementById("onTaskCanvas").toDataURL("image/png")	+ "'/><br/><i>Subject: red,   Peer: blue</i>" +
-												   "<hr/><br/><br/><b>OTM / OTV / OTP</b>		<br/><img src='" + document.getElementById("offTaskCanvas").toDataURL("image/png")	+ "'/><br/><i>Subject: red,   Peer: blue</i>" +
-												   "<hr/><br/><br/>Generated from my <b><i>Student Observation App</b></i> on iPhone.<br/>Developed by <a href='http://apps.monkeylikesit.com'>Monkey Apps</a> at <a href='http://monkeylikesit.com'>http://monkeylikesit.com</a>";
-*/
-									emailMessage = "Student:\t" + name + "\n" +
-												   "Location:\t" + location + "\n" +
-												   "Date:\t\t\t" + shortDate + "\n" +
-												   "-------------------------------------\n" +
-												   subjectObservationSummary +
-												   "-------------------------------------\n" +
-												   peerObservationSummary +
-												   "-------------------------------------\n" +
-/*												   "OBSERVATION DETAILS\n\n" +
-												   subjectIntervals + " \t Subject: # of Intervals Total\n " +
-												   subjectOnTask +    " \t Subject: # of Intervals On-Task\n " +
-												   subjectAET +		  " \t Subject: # of Intervals AET\n " +
-												   subjectPET +		  " \t Subject: # of Intervals PET\n " +
-												   subjectOffTask +   " \t Subject: # of Intervals Off-Task\n " +
-												   subjectAET +		  " \t Subject: # of Intervals AET\n " +
-												   subjectPET +		  " \t Subject: # of Intervals PET\n " +
-												   subjectOTM +		  " \t Subject: # of Intervals OTM\n " +
-												   subjectOTV +		  " \t Subject: # of Intervals OTV\n " +
-												   subjectOTP +		  " \t Subject: # of Intervals OTP\n " +
-												   subjectIntervals + " \t Subject: # of Intervals\n " +
-												   totalPeerIntervals + " \t# of Peer Intervals\n " +
- */
-												   "Thank you for using SOTO!\n" +
-												   "http://monkeylikesit.com/soto\n\n" +
-												   "Questions or Feedback?  Visit http://monkeylikesit.com/support\n\n" +
-												   "If you like the SOTO app, Like us on our Facebook page and leave us a review in the iTunes App Store!\n\n" +
-												   "Facebook:  http://facebook.com/monkeylikesit\n\n" +
-												   "App Store: http://itunes.apple.com/us/app/soto-student-on-task-observation/id428809608?mt=8&ls=1\n"
-												   ;
+	staticHREF = "mailto:" + localStorage.userEmail + "?";
+	emailSubject = "SOTO Report: " + name;
+	/*									emailMessage = "<h1>SOA Report for " + name + "</h1>Location: <b>" + location + "</b><br/>Date: <b>" + date + "</b><br/>"  +
+	 subjectObservationSummary + peerObservationSummary +
+	 "<hr/><br/><br/><b>On-Task / Off-Task</b>	<br/><img src='" + document.getElementById("can").toDataURL("image/png") + "'/><br/><i>Subject: red,   Peer: blue</i>" +
+	 "<hr/><br/><br/><b>AET / PET</b>				<br/><img src='" + document.getElementById("onTaskCanvas").toDataURL("image/png")	+ "'/><br/><i>Subject: red,   Peer: blue</i>" +
+	 "<hr/><br/><br/><b>OTM / OTV / OTP</b>		<br/><img src='" + document.getElementById("offTaskCanvas").toDataURL("image/png")	+ "'/><br/><i>Subject: red,   Peer: blue</i>" +
+	 "<hr/><br/><br/>Generated from my <b><i>Student Observation App</b></i> on iPhone.<br/>Developed by <a href='http://apps.monkeylikesit.com'>Monkey Apps</a> at <a href='http://monkeylikesit.com'>http://monkeylikesit.com</a>";
+	*/
+	emailMessage = "Student:\t" + name + "\n" +
+	 "Location:\t" + location + "\n" +
+	 "Date:\t\t\t" + shortDate + "\n" +
+	 "-------------------------------------\n" +
+	 subjectObservationSummary +
+	 "-------------------------------------\n" +
+	 peerObservationSummary +
+	 "-------------------------------------\n" +
+	/*												   "OBSERVATION DETAILS\n\n" +
+	 subjectIntervals + " \t Subject: # of Intervals Total\n " +
+	 subjectOnTask +    " \t Subject: # of Intervals On-Task\n " +
+	 subjectAET +		  " \t Subject: # of Intervals AET\n " +
+	 subjectPET +		  " \t Subject: # of Intervals PET\n " +
+	 subjectOffTask +   " \t Subject: # of Intervals Off-Task\n " +
+	 subjectAET +		  " \t Subject: # of Intervals AET\n " +
+	 subjectPET +		  " \t Subject: # of Intervals PET\n " +
+	 subjectOTM +		  " \t Subject: # of Intervals OTM\n " +
+	 subjectOTV +		  " \t Subject: # of Intervals OTV\n " +
+	 subjectOTP +		  " \t Subject: # of Intervals OTP\n " +
+	 subjectIntervals + " \t Subject: # of Intervals\n " +
+	 totalPeerIntervals + " \t# of Peer Intervals\n " +
+	*/
+	 "Thank you for using SOTO!\n" +
+	 "http://monkeylikesit.com/soto\n\n" +
+	 "Questions or Feedback?  Visit http://monkeylikesit.com/support\n\n" +
+	 "If you like the SOTO app, Like us on our Facebook page and leave us a review in the iTunes App Store!\n\n" +
+	 "Facebook:  http://facebook.com/monkeylikesit\n\n" +
+	 "App Store: http://itunes.apple.com/us/app/soto-student-on-task-observation/id428809608?mt=8&ls=1\n"
+	 ;
 
-												   //document.getElementById("sendReportLink").href= staticHREF + emailSubject + emailMessage;
-												   //document.getElementById("sendReportLink").onclick = "javascript:showEmailComposer(" + emailSubject + "," + emailMessage + "," + "jjcalo@yahoo.com" + ", nil, nil, YES);";
+	 //document.getElementById("sendReportLink").href= staticHREF + emailSubject + emailMessage;
+	 //document.getElementById("sendReportLink").onclick = "javascript:showEmailComposer(" + emailSubject + "," + emailMessage + "," + "jjcalo@yahoo.com" + ", nil, nil, YES);";
 
-				                },
-				                errorHandler
-				            ); //end executeSQL
-				        }
-				    );   //end db.transaction
-                },
-                errorHandler
-            ); //end executeSQL
-        }
-    );     //end db.transaction
+	});
+
+	console.log("exiting getObservationResults( " + _obsv.StudentId + " )");
 }
 function initCanvas(_canvas, _arrayLabels, _arrayDataPairs) {
 	var ctx;

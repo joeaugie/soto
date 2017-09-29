@@ -57,7 +57,7 @@ function Observation (row) {
     this.Student.mapStudent(row);
     this.Location = row.Location;
     this.DateObservation = row.DateObservation;
-    this.ActivityDescription;
+    this.ActivityDescription = row.ActivityDescription;
     this.OtCode1 = row.OtCode1;
     this.OtCode2 = row.OtCode2;
     this.OtCode3 = row.OtCode3;
