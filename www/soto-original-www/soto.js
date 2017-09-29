@@ -9,7 +9,6 @@ var emailSubject;
 var emailMessage;
 var staticHREF;
 
-
 	// Global variables used for all recording session logic.
 	// These variables should be reset after the END of every observation session.
 	// See helper function "resetGlobalVariables" for maintaining these values throughout the application.
