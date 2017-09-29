@@ -188,7 +188,15 @@ function update_Student (_student) {
   tctExecuteSql(strSql, args);
 }
 
+function delete_Observation (_observationId) {
+  console.group("entering delete_Observation( " + _observationId + " )");
+  var args = [_observationId];
 
+  tctExecuteSql("DELETE FROM Interval WHERE ObservationId=?;", args);
+  tctExecuteSql("DELETE FROM Observation WHERE ObservationId=?;", args);
+
+  console.groupEnd();
+}
 
 /** Helper function to execute a SQL transaction
  * @param {string} strSql - SQL statement to execute
