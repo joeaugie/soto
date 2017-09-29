@@ -247,12 +247,14 @@ function getStudentObservations() {
 
 function displayObservations(result) {
 	console.log("entered displayObservations()");
-	$('#viewSessionsPanel ul li:gt(0)').remove();
+	var newEntryTemplate = $('#savedSessionItem').clone();
+	$('#viewSessionsPanel ul').empty();
+//	$('#viewSessionsPanel ul li:gt(0)').remove();
 
 	for (var i = 0; i < result.rows.length; i++) {
+		console.log("processing item " + i);
 		var observation = new Observation(result.rows.item(i));
-		observation.printObservation();
-		var newEntryRow = $('#savedSessionItem').clone();
+		var newEntryRow = newEntryTemplate.clone();
 		newEntryRow.removeAttr('style');
 		newEntryRow.data('entryId', observation.ObservationId);
 		newEntryRow.data('entityObject', observation);
@@ -260,37 +262,26 @@ function displayObservations(result) {
 		newEntryRow.find('#subjectName').text(observation.Student.getFullName());
 		newEntryRow.find('#classLocation').text(observation.Location);
 		newEntryRow.find('#observationDate').text(moment(observation.DateObservation).format('ddd MM-DD-YYYY'));
-//		newEntryRow.find('#subjectName').click(function () {
-		newEntryRow.click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = ($(this).data('entryId'));
-			// var clickedEntityObject = clickedEntry.data('entityObject');
-			var clickedEntityObject = $(this).data('entityObject');
-			console.log("  clickedEntryId: " + clickedEntryId);
+		newEntryRow.find('#subjectName').click(function () {
+			var clickedEntityObject = $(this).parents('#savedSessionItem').data('entityObject');
 			console.log("  clickedEntityObject: " + clickedEntityObject.Student.getFullName());
 			getObservationResults(clickedEntityObject);
 		});
-
-/*		newEntryRow.find('#classLocation').click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			var clickedEntityObject = clickedEntry.data('entityObject');
+		newEntryRow.find('#classLocation').click(function () {
+			var clickedEntityObject = $(this).parents('#savedSessionItem').data('entityObject');
+			console.log("  clickedEntityObject: " + clickedEntityObject.Student.getFullName());
 			getObservationResults(clickedEntityObject);
 		});
 		newEntryRow.find('#observationDate').click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			var clickedEntityObject = clickedEntry.data('entityObject');
+			var clickedEntityObject = $(this).parents('#savedSessionItem').data('entityObject');
+			console.log("  clickedEntityObject: " + clickedEntityObject.Student.getFullName());
 			getObservationResults(clickedEntityObject);
 		});
-*/
 		newEntryRow.find('.delete').click(function () {
-			var clickedEntry = $(this).parent();
-			var clickedEntryId = clickedEntry.data('entryId');
-			//var clickedEntityObject = clickedEntry.data('entityObject');
+			var clickedEntryId = $(this).parents('#savedSessionItem').data('entityObject').ObservationId;
 			if (confirm("Are you sure you want to DELETE this observation?") == true){
-											deleteEntryById(clickedEntityObject);
-											clickedEntry.slideUp();
+				deleteEntryById(clickedEntryId);
+				$(this).parent().slideUp();
 			}
 		});
 	} //end FOR Loop
@@ -300,7 +291,7 @@ function displayObservations(result) {
 
 function deleteEntryById(_observation) {
 	console.group("entering deleteEntryById( " + _observation +  " )");
-	delete_Observation(_observation.ObservationId);
+	delete_Observation(_observation);
 	console.groupEnd();
 }
 function getObservationResults(_obsv){
