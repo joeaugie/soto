@@ -30,6 +30,7 @@ var staticHREF;
 	var arOTM = new Array();
 	var arOTV = new Array();
 	var arOTP = new Array();
+	var arNotes = new Array();
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {

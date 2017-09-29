@@ -193,7 +193,7 @@
                 </div>
             </fieldset>
             <fieldset>
-              <input id="recordSessionIntervalNotesButton" type="button" value="Record Notes For Interval X" />
+              <input id="recordSessionIntervalNotesButton" onclick="captureNotes()" type="button" value="Record Notes For Interval X" />
             </fieldset>
           </div>
         </form>
@@ -207,7 +207,7 @@
         <label for="notes">Notes:</label>
         <textarea name="notes" id="notes"></textarea>
       </div>
-      <input id="saveNotes" type="button" name="saveNotes" value="Save" />
+      <a id="saveNotes" name="saveNotes" data-role="button" value="Save" href="#recordSessionPanel">Save</>
     </div>
     <div id="viewSessionsPanel" data-role="page">
         <div class="toolbar" data-role="header" data-position="fixed" data-theme="b">
