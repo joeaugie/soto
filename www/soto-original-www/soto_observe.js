@@ -91,7 +91,7 @@ function saveNewSession() {
 	}
 	else {
 		db.transaction(function(tx, rs) {
-			var newStud = new Student(null, newSessionStudentName);
+			var newStud = new Student(null, newSessionStudentName, null, new Date());
 			insert_NewStudent (tx, newStud, function(){
 				var newObsv = new Observation();
 				newObsv.Student = newStud;
