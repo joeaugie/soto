@@ -332,7 +332,7 @@ if (description.length == 0) description = "&nbsp;";
 	  var peerOTV = 0;
 	  var peerOTP = 0;
 		var rawDataDump = "<table> \
-												<tr><th>Interval Number</th><th>Target</th><th>On/Off Task</th><th>" + _obsv.OtCode1 + "</th><th>" + _obsv.OtCode2 + "</th><th>" + _obsv.OtCode3 + "</th></tr>";
+												<tr><th>Interval Number</th><th>Target</th><th>On/Off Task</th><th>" + _obsv.OtCode1 + "</th><th>" + _obsv.OtCode2 + "</th><th>" + _obsv.OtCode3 + "</th><th>Notes</th></tr>";
 
 
 	  for (var i = 0; i < result.rows.length; i++) {
