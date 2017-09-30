@@ -30,6 +30,7 @@ var staticHREF;
 	var arOTM = new Array();
 	var arOTV = new Array();
 	var arOTP = new Array();
+	var arNotes = new Array();
 	var currentInsertedRowID; // Holds the ID of a new studentObservations record in the database.
 
 $(document).ready(function () {
@@ -331,13 +332,13 @@ if (description.length == 0) description = "&nbsp;";
 	  var peerOTV = 0;
 	  var peerOTP = 0;
 		var rawDataDump = "<table> \
-												<tr><th>Interval Number</th><th>Target</th><th>On/Off Task</th><th>" + _obsv.OtCode1 + "</th><th>" + _obsv.OtCode2 + "</th><th>" + _obsv.OtCode3 + "</th></tr>";
+												<tr><th>Interval Number</th><th>Target</th><th>On/Off Task</th><th>" + _obsv.OtCode1 + "</th><th>" + _obsv.OtCode2 + "</th><th>" + _obsv.OtCode3 + "</th><th>Notes</th></tr>";
 
 
 	  for (var i = 0; i < result.rows.length; i++) {
 	      var row = result.rows.item(i);
 				rawDataDump = rawDataDump + "<tr><td>" + row.IntervalNumber + "</td><td>" + row.Target + "</td><td>" + row.OnTask +
-																	  "</td><td>" + row.OffTask_1 + "</td><td>" + row.OffTask_2 + "</td><td>" + row.OffTask_3 + "</td></tr>";
+																	  "</td><td>" + row.OffTask_1 + "</td><td>" + row.OffTask_2 + "</td><td>" + row.OffTask_3 + "</td><td>" + row.IntervalNotes + "</td></tr>";
 
 	      if (row.Target == "Subject") {
 	          // Track counts for Summary Data Report

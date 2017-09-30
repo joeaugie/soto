@@ -154,6 +154,15 @@ function beginRecordingSession() {
   }
 }
 
+function pauseRecordingSession() {
+    clearInterval(t);
+    timer_is_on = 0;
+}
+
+function captureNotes() {
+	$.mobile.navigate("#intervalNotes");
+}
+
 function timedCount() {
 	var timer = INTERVAL_LENGTH;
 
@@ -200,6 +209,7 @@ function saveIntervalData(_intervalTarget) {
     var _otm;
     var _otv;
     var _otp;
+		var _notes;
 
     if (document.getElementById("AET").checked == true) _onTask = "AET";
     else if (document.getElementById("PET").checked == true) _onTask = "PET";
@@ -209,12 +219,15 @@ function saveIntervalData(_intervalTarget) {
     if (document.getElementById("OTV").checked == true) _otv = true; else _otv = false;
     if (document.getElementById("OTP").checked == true) _otp = true; else _otp = false;
 
+		_notes = document.getElementById("notes").value;
+
 	arInterval[arIndex] = interval;
 	arTarget[arIndex] = _intervalTarget;
 	arOnTask[arIndex] = _onTask;
 	arOTM[arIndex] = _otm;
 	arOTV[arIndex] = _otv;
 	arOTP[arIndex] = _otp;
+	arNotes[arIndex] = _notes;
 	arIndex++;
     return true;
 }
@@ -269,11 +282,6 @@ function clickOTP() {
 	else document.getElementById("OTP").checked = true;
 }
 
-function pauseRecordingSession() {
-    clearInterval(t);
-    timer_is_on = 0;
-}
-
 function endRecordingSession() {
     answer = confirm("Do you want to END this session?");
 	if (answer){
@@ -296,6 +304,7 @@ function endRecordingSession() {
 				newInterval.OffTask_1 = arOTM[i];
 				newInterval.OffTask_2 = arOTV[i];
 				newInterval.OffTask_3 = arOTP[i];
+				newInterval.IntervalNotes = arNotes[i];
 
 				/*
 				sqlMassInsert = "INSERT INTO Interval (ObservationId, IntervalNumber, target, onTask, OTM, OTV, OTP) VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -336,6 +345,7 @@ function resetAllRecordingSessionFields() {
     document.getElementById("OTM").checked = false;
     document.getElementById("OTV").checked = false;
     document.getElementById("OTP").checked = false;
+		document.getElementById("notes").value = "";
 		checkOnTask();
 }
 function resetGlobalVariables(){
